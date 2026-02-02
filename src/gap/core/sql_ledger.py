@@ -55,8 +55,6 @@ class SqlLedger(Ledger):
                 )
                 
                 # 2. Check File Existence (The "Hybrid" Part)
-                # Truth Source: DB vs FS
-                
                 db_step = db_map.get(step.step)
                 
                 # Check FS Reality
@@ -70,27 +68,24 @@ class SqlLedger(Ledger):
                 
                 # Decision Logic
                 if is_live:
-                    # File exists -> Complete (regardless of DB, FS is ultimate truth)
-                    # Ideally we sync this back to DB if DB thinks it's locked?
-                    current = StepStatus.COMPLETE
+                    # CRITICAL: Validate dependencies before marking complete
+                    if not dependencies_met:
+                        # File exists but dependencies not met - this is drift/bypass
+                        current = StepStatus.INVALID
+                    else:
+                        # File exists and dependencies met -> Complete
+                        current = StepStatus.COMPLETE
                 elif db_step and db_step.status == "complete":
-                    # DB thinks complete, but file missing? 
-                    # This is "Drift". We trust FS (Locked) or warn?
-                    # For GAP, "Read-Open", if file is gone, it is NOT complete.
-                    # So we fallback to Locked/Unlocked.
+                    # DB thinks complete, but file missing - this is drift
+                    # For GAP, "Read-Open", if file is gone, it is NOT complete
+                    # Fallback to dependency-based status
                     pass 
                 elif is_proposed:
                     current = StepStatus.PENDING
                 elif dependencies_met:
                     current = StepStatus.UNLOCKED
                     
-                # DB Override/Enrichment
-                # If DB is strictly ahead of FS (e.g. Approved but file not moved yet?), 
-                # that shouldn't happen if 'approve' is atomic.
-                
-                # If Is Live, we mark Complete.
-                # Use DB for metadata.
-                
+                # Use DB for metadata if status is COMPLETE
                 step_data = StepData(status=current)
                 if current == StepStatus.COMPLETE:
                      # Get metadata from DB if available

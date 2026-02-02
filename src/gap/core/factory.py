@@ -4,30 +4,30 @@ from typing import Optional
 
 from gap.core.ledger import Ledger, YamlLedger
 from gap.core.sql_ledger import SqlLedger
+from gap.core.manifest import GapManifest
 
-def get_ledger(root: Path) -> Ledger:
+def get_ledger(root: Path, manifest: GapManifest) -> Ledger:
     """
     Factory to return the appropriate Ledger implementation.
     Prioritizes SQL if GAP_DB_URL is set, otherwise defaults to YAML.
+    
+    Args:
+        root: Project root directory
+        manifest: Loaded manifest (required for SQL ledger initialization)
+    
+    Returns:
+        Ledger implementation (YamlLedger or SqlLedger)
     """
     db_url = os.environ.get("GAP_DB_URL")
     
     if db_url:
-        # We need project name/protocol.
-        # In a real app, we might load these from manifest FIRST, 
-        # or pass them in. 
-        # But get_ledger is often called before loading manifest?
-        # Actually in check/scribe/gate, we load manifest first.
-        # But wait, Ledger Interface doesn't take project_name in __init__?
-        # YamlLedger(root) -> Simple.
-        # SqlLedger(url, name, proto, root) -> Complex.
-        
-        # Challenge: To initialize SqlLedger, we need Project Name + Protocol.
-        # But the Factory logic is generic.
-        
-        # Solution: The Factory might need the Manifest?
-        # Or we delay initialization?
-        pass
-
-    # Fallback
+        # Use SQL ledger with project metadata from manifest
+        return SqlLedger(
+            db_url=db_url,
+            project_name=manifest.name,
+            protocol=f"{manifest.kind}-{manifest.version}",
+            root=root
+        )
+    
+    # Default to YAML ledger
     return YamlLedger(root)

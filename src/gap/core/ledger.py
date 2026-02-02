@@ -53,17 +53,19 @@ class YamlLedger(Ledger):
             current = StepStatus.LOCKED
             
             if is_live:
-                # HYBRID CHECK: Files are truth
-                current = StepStatus.COMPLETE
+                # CRITICAL: Validate dependencies before marking complete
+                if not dependencies_met:
+                    # File exists but dependencies not met - this is drift/bypass
+                    current = StepStatus.INVALID
+                else:
+                    # HYBRID CHECK: Files are truth
+                    current = StepStatus.COMPLETE
             elif is_proposed:
                 current = StepStatus.PENDING
             elif dependencies_met:
                 current = StepStatus.UNLOCKED
                 
-            # If ledger has more info (like timestamp), preserve it?
-            # For now, we trust the calculated status, but if it is COMPLETE, 
-            # we might want to pull metadata from the loaded ledger if available.
-            
+            # If ledger has more info (like timestamp), preserve it
             step_data = StepData(status=current)
             
             if current == StepStatus.COMPLETE and step.step in ledger.steps:

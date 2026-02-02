@@ -5,9 +5,10 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-from gap.core.manifest import load_manifest
+from gap.core.manifest import load_manifest, GateType
 from gap.core.state import StepStatus
 from gap.core.factory import get_ledger
+from gated_agent.security import ACLEnforcer
 
 app = typer.Typer(help="Manage approvals and state transitions.")
 
@@ -51,6 +52,7 @@ def approve(
     Approve a proposal.
     Moves file from .gap/proposals/ -> Live.
     Updates .gap/status.yaml.
+    Extracts and stores ACL for next gate.
     """
     # 1. Load Context
     if not manifest_path.exists():
@@ -71,15 +73,69 @@ def approve(
     if not proposal_path.exists():
         typer.secho(f"Error: No proposal found for step '{step}' at {proposal_path}.", fg=typer.colors.RED)
         raise typer.Exit(code=1)
-        
-    # 4. Move to Live (The Gate)
+    
+    # 4. Extract and Validate ACL (Security Integration)
+    with open(proposal_path, 'r') as f:
+        content = f.read()
+    
+    enforcer = ACLEnforcer(content=content)
+    
+    # Warn if no ACL for manual gates
+    if step_def.gate == GateType.MANUAL:
+        if not enforcer.context.allowed_writes and not enforcer.context.allowed_execs:
+            typer.secho(
+                "⚠️  Warning: No ACL block found in proposal.",
+                fg=typer.colors.YELLOW
+            )
+            typer.secho(
+                "    Next gate will be read-only by default.",
+                fg=typer.colors.YELLOW
+            )
+            if not typer.confirm("Continue with approval?"):
+                raise typer.Exit(0)
+    
+    # Store ACL for next gate's use
+    acl_dir = root / ".gap" / "acls"
+    acl_dir.mkdir(parents=True, exist_ok=True)
+    acl_path = acl_dir / f"{step}.yaml"
+    
+    with open(acl_path, "w") as f:
+        yaml.dump({
+            "allow_write": enforcer.context.allowed_writes,
+            "allow_exec": enforcer.context.allowed_execs
+        }, f)
+    
+    # 5. Move to Live (The Gate) - with atomic rollback
     target_path = root / step_def.artifact
-    target_path.parent.mkdir(parents=True, exist_ok=True)
+    backup_path = None
     
-    shutil.move(str(proposal_path), str(target_path))
-    typer.secho(f"✅ Approved! Moved to: {target_path}", fg=typer.colors.GREEN)
-    
-    # 5. Update Ledger (State Persistence)
-    # Refactored to use Ledger Interface
-    ledger = get_ledger(root, manifest)
-    ledger.update_status(step, StepStatus.COMPLETE, approver="user")
+    try:
+        # Backup existing file if present
+        if target_path.exists():
+            backup_path = target_path.with_suffix(target_path.suffix + ".bak")
+            shutil.copy2(target_path, backup_path)
+        
+        # Move proposal to live
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(proposal_path), str(target_path))
+        
+        # Update ledger (State Persistence)
+        ledger = get_ledger(root, manifest)
+        ledger.update_status(step, StepStatus.COMPLETE, approver="user")
+        
+        # Success - remove backup
+        if backup_path and backup_path.exists():
+            backup_path.unlink()
+        
+        typer.secho(f"✅ Approved! Moved to: {target_path}", fg=typer.colors.GREEN)
+        if enforcer.context.allowed_writes or enforcer.context.allowed_execs:
+            typer.secho(f"🔒 ACL stored for next gate: {acl_path}", fg=typer.colors.BLUE)
+        
+    except Exception as e:
+        # Rollback on failure
+        if backup_path and backup_path.exists():
+            shutil.move(str(backup_path), str(target_path))
+            typer.secho("⚠️  Rolled back changes due to error.", fg=typer.colors.YELLOW)
+        
+        typer.secho(f"❌ Approval failed: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)

@@ -39,8 +39,14 @@ class ACLEnforcer:
         """
         try:
             # Regex to find the Access Control section and the first YAML block within it
+            # Supports both ```yaml and '''yaml formats
             pattern = r"##\s+Access Control.*?\n```yaml\n(.*?)\n```"
             match = re.search(pattern, content, re.DOTALL)
+
+            if not match:
+                # Try alternative format with single quotes
+                pattern = r"##\s+Access Control.*?\n'''yaml\n(.*?)\n'''"
+                match = re.search(pattern, content, re.DOTALL)
 
             if not match:
                 return ACLContext([], [])
@@ -54,7 +60,7 @@ class ACLEnforcer:
             )
             
         except Exception as e:
-            print(f"[GAP SECURITY] Failed to parse ACL from {artifact_path}: {e}")
+            print(f"[GAP SECURITY] Failed to parse ACL: {e}")
             return ACLContext([], [])
 
     def validate_write(self, target_path: str) -> bool:

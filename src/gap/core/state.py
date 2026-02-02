@@ -11,6 +11,7 @@ class StepStatus(str, Enum):
     UNLOCKED = "unlocked"   # Dependencies met, ready for Scribe
     PENDING = "pending"     # Proposal exists, waiting for Gate
     COMPLETE = "complete"   # File exists in Live & Ledger
+    INVALID = "invalid"     # File exists but dependencies not met (drift detected)
 
 class StepData(BaseModel):
     status: StepStatus
