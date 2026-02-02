@@ -1,0 +1,51 @@
+kind: protocol
+name: software-engineering
+version: 0.1.0
+description: "The Sovereign Standard for Software Development (Reqs -> Plan -> Code -> Verify)."
+
+flow:
+  - step: requirements
+    name: "Requirements & Analysis"
+    template: requirements
+    artifact: docs/requirements.md
+    gate: manual
+    description: "Define the problem, user stories, and constraints."
+
+  - step: design
+    name: "Technical Design"
+    template: design
+    artifact: docs/design.md
+    gate: manual
+    needs: [requirements]
+    description: "Architecture, Data Structures, and Interfaces."
+
+  - step: plan
+    name: "Implementation Plan"
+    template: plan
+    artifact: docs/plan.md
+    gate: manual
+    needs: [design]
+    description: "Step-by-step execution tasks."
+
+  - step: implementation
+    name: "Coding"
+    template: task
+    artifact: docs/task.md
+    gate: auto
+    needs: [plan]
+    description: "Tracking the build progress."
+
+  - step: verification
+    name: "Verification & Walkthrough"
+    template: verification
+    artifact: docs/walkthrough.md
+    gate: manual
+    needs: [implementation]
+    description: "Proof of work and test results."
+
+templates:
+  requirements: templates/requirements.md
+  design: templates/design.md
+  plan: templates/plan.md
+  task: templates/task.md
+  verification: templates/verification.md

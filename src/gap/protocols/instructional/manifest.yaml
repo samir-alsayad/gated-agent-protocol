@@ -1,0 +1,51 @@
+kind: protocol
+name: instructional
+version: 1.1.0 (Universal)
+description: "The Socratic Teaching Method (Intent -> Course -> Section -> Lesson)"
+
+flow:
+  - step: requirements
+    name: "Capturing Intent"
+    template: intent
+    artifact: docs/intent.md
+    gate: manual
+    description: "The Student defines what they want to learn."
+
+  - step: design_course
+    name: "Course Design"
+    template: course
+    artifact: docs/course.md
+    gate: manual
+    needs: [requirements]
+    description: "The Teacher proposes the High-Level Arc."
+
+  - step: design_section
+    name: "Section Design"
+    template: section
+    artifact: docs/section.md
+    gate: manual
+    needs: [design_course]
+    description: "The Teacher proposes the specific Unit sequence."
+
+  - step: task
+    name: "The Content (Material)"
+    template: content
+    artifact: docs/content.md
+    gate: manual
+    needs: [design_section]
+    description: "The Teacher drafts the content."
+
+  - step: verification
+    name: "The Assessment (Quiz)"
+    template: assessment
+    artifact: docs/assessment.md
+    gate: auto
+    needs: [task]
+    description: "The Student proves knowledge."
+
+templates:
+  intent: templates/intent.md
+  course: templates/course.md
+  section: templates/section.md
+  content: templates/content.md
+  assessment: templates/assessment.md
