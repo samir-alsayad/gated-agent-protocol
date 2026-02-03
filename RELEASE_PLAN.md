@@ -283,36 +283,43 @@ if warnings:
 
 ---
 
-### Task 2.2: Complete Software Engineering Protocol
+### Task 2.2: Migrate Legacy Protocols
 **Priority:** 🟠 High  
-**Effort:** 6 hours
+**Effort:** 4 hours
 
-**Create Missing Templates:**
+**Discovery:** Rich protocols already exist in `.archive/protocols_legacy/` including:
+- Software Development (specs-first with EARS syntax)
+- Empirical Research (pre-registration workflow)
+- Complete examples with intent, spec, plan, walkthrough
 
-1. `src/gap/protocols/software-engineering/templates/requirements.md`
-2. `src/gap/protocols/software-engineering/templates/design.md`
-3. `src/gap/protocols/software-engineering/templates/plan.md` (with ACL block)
-4. `src/gap/protocols/software-engineering/templates/task.md`
-5. `src/gap/protocols/software-engineering/templates/verification.md`
+**Migration Strategy:**
 
-**Key Addition - plan.md:**
-```markdown
-# Implementation Plan
-
-## Tasks
-- [ ] Task 1
-- [ ] Task 2
-
-## Access Control
+1. **Adapt manifest format:**
 ```yaml
-allow_write:
-  - "src/**/*.py"
-  - "tests/**/*.py"
-allow_exec:
-  - "pytest tests/"
-  - "python -m mypy src/"
+# Convert from old format (gates) to new format (flow)
+# Old: gates with permissions and verification rules
+# New: flow with steps, artifacts, and gate types
 ```
+
+2. **Preserve the rigor:**
+- Keep EARS syntax for constraints
+- Keep traceability metadata (G-, C-, P- prefixes)
+- Keep ACL blocks in plan templates
+- Keep verification rules as documentation
+
+3. **Create templates from examples:**
+```bash
+# Use cli-file-organizer example as template basis
+cp .archive/protocols_legacy/software/development/examples/cli-file-organizer/intent.md \
+   src/gap/protocols/software-engineering/templates/intent.md
+   
+# Generalize with Jinja2 variables
 ```
+
+4. **Update to match current schema:**
+- Convert `gates` to `flow` with `step` objects
+- Map `responsible_role` to documentation
+- Convert `permissions` to gate-level ACL expectations
 
 ---
 

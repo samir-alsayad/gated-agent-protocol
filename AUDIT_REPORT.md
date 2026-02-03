@@ -450,7 +450,7 @@ elif deps_met: return UNLOCKED
 - ❌ No ACL blocks in plan template
 - ❌ `implementation` step has `gate: auto` but should require ACL
 
-**Critical:** The software protocol is incomplete - templates don't exist
+**Update:** Comprehensive software and science protocols exist in `.archive/protocols_legacy/` with full examples. These should be migrated to the new structure rather than created from scratch.
 
 ---
 
