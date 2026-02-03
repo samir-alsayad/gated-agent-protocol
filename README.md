@@ -67,9 +67,10 @@ GAP enforces a strict **Chain of Custody** for every action an Agent takes:
 
 ### The Traceability Trinity
 
-Every artifact links to its source:
-- **Requirement** → validated by → **Property** → implemented by → **Task**
+Every artifact links back to its source:
 
+- **Task** → links to → **Policy** → links to → **Design** → links to → **Requirements**
+  
 If an Agent tries to act without this "Golden Thread", the Harness blocks it.
 
 ### Boolean Gates
@@ -113,10 +114,7 @@ During execution, the Harness can pause at designated points:
 
 ## 🤝 Contributing
 
-We welcome protocols! Submit your domain-specific workflows via PR:
-- **Software Engineering** (Reqs → Design → Plan → Code → Verify)
-- **Instructional** (Intent → Course → Section → Lesson → Assessment)
-- **Research** (Hypothesis → Pre-Registration → Experiment → Analysis)
+We welcome contributions! Please reach out.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
