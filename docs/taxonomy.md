@@ -1,44 +1,54 @@
-# GAP Taxonomy: The Canon
+# GAP Taxonomy (Authoritative)
 
-**Version**: 2.0 (The Project-First Era)
-**Objective**: To strictly define the entities within the Gated Agent Protocol.
+**Purpose:** Define the language of GAP. Agents must use these terms consistently.
+**Core Philosophy:** [Board of Decisions](DECISIONS.md)
 
-## 1. The Hierarchy
+---
 
-### A. The Tool (`GAP`)
-The framework itself. It provides the **Protocols** (Tools) and the **Enforcement Engine** (Gates).
+## 1. Governance Terms (The Law)
 
-### B. The Protocol (`protocols/*`)
-A "Mode of Cognition". A composable **State Machine** that defines *how* work is done.
-*   **Nature**: Abstract, Reusable, Composable.
-*   **Examples**:
-    *   `protocols/instructional`: The Teacher (Reqs -> Curriculum -> Lesson).
-    *   `protocols/software`: The Builder (Specs -> Architecture -> Code).
-    *   `protocols/research`: The Scientist (Question -> Hypothesis -> Experiment).
+### Decision Record
+An explicit commitment that constrains future work. Must be **Gated** (User Approved).
+*   **Requirements**: Intent decisions (What/Why).
+*   **Design**: Structural decisions (How).
+*   **Task**: Operational decisions (Action).
 
-### C. The Project (`projects/*`)
-A "Concrete Goal". An implementation that *uses* protocols to achieve an outcome.
-*   **Nature**: Specific, Grounded, Sovereign.
-*   **Examples**:
-    *   `projects/school-of-first-principles`: Uses `instructional` to teach.
-    *   `projects/my-novel`: Uses `creative-writing` to author.
+**Note**: A Decision Record is created during a **Decision Phase**.
 
-### D. The Domain (`projects/*/domains/*`)
-A logical subdivision within a massive Project.
-*   **Nature**: Organizational (Folder-based).
-*   **Role**: Isolates context (e.g., "Computing" vs "Life").
-*   **Note**: Small projects do NOT need domains.
+### Execution Output
+The material produced by performing a Task.
+*   **Status**: Non-authoritative, mutable by default.
+*   **Examples**: Code, Prose, Lessons, Assignments.
+*   **Agent Execution**: The Agent producing the output (e.g., Scribing a file).
 
-## 2. The Artifacts
+### Gate
+A checkpoint where work is reviewed and approved.
+*   **Decision Gate**: Mandatory. Converts a Proposal to Law.
+*   **Execution Gate**: Optional. Validates quality before merge.
+*   **Types**: True (User Approval) or False (Autonomous Transition).
 
-### A. The Manifest (`manifest.yaml`)
-The Configuration file found at the root of every Protocol and Project.
-*   **Protocol Manifest**: Defines the Steps, Gates, and Templates.
-*   **Project Manifest**: Defines the Composition (`extends: [instructional]`) and Role Limits.
+### Ledger
+The immutable history of which Decision Records have been approved.
 
-### B. The Templates (`templates/*.md`)
-The blueprints for State definition.
-*   `intent.md`: Requirement capture.
-*   `module.md`: Design Proposal.
-*   `codex.md`: Immutable Content.
-*   `reflection.md`: User State.
+---
+
+## 2. Core Architecture
+
+### Project
+A directory managed by GAP (contains `manifest.yaml`).
+
+### Protocol
+A re-usable workflow template (e.g., `instructional`, `software`).
+
+### Phase Classes
+The Classes of phases.
+*   **Decision Phases**: Captures Decision Records.
+*   **Execution Phases**: Derived from the execution policy, the Phases between the approval Gates.
+
+### Phase
+A specific phase inside a Phase Class (e.g., `Requirements Phase`).
+
+### Manifest
+The configuration file defining the Project's Protocol.
+
+---

@@ -8,14 +8,14 @@ flow:
     name: "Capturing Intent"
     template: intent
     artifact: docs/intent.md
-    gate: manual
+    gate: true
     description: "The Student defines what they want to learn."
 
   - step: design_course
     name: "Course Design"
     template: course
     artifact: docs/course.md
-    gate: manual
+    gate: true
     needs: [requirements]
     description: "The Teacher proposes the High-Level Arc."
 
@@ -23,7 +23,7 @@ flow:
     name: "Section Design"
     template: section
     artifact: docs/section.md
-    gate: manual
+    gate: true
     needs: [design_course]
     description: "The Teacher proposes the specific Unit sequence."
 
@@ -31,7 +31,7 @@ flow:
     name: "The Content (Material)"
     template: content
     artifact: docs/content.md
-    gate: manual
+    gate: true
     needs: [design_section]
     description: "The Teacher drafts the content."
 
@@ -39,7 +39,7 @@ flow:
     name: "The Assessment (Quiz)"
     template: assessment
     artifact: docs/assessment.md
-    gate: auto
+    gate: false
     needs: [task]
     description: "The Student proves knowledge."
 

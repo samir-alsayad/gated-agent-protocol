@@ -2,12 +2,18 @@
 
 **Objective**: To define the behavioral rules of the Gated Agent Protocol.
 
-## 1. The Core Principle: The Scribe Pattern
-**"Logic in Chat. State in Files."**
+## 1. The Core Philosophy: "Decision Records"
 
-*   **The Agent (Logic)**: Operates in the Chat Interface. It thinks, proposes, and reasons.
-*   **The System (State)**: Operates on the File System. It writes, moves, and locks files.
-*   **The Interface**: The Agent *never* writes files directly. It submits a **Proposal** to the System.
+**Each GAP document is not just a description of work; it is a frozen Decision Record.**
+
+> "All intentional creation depends on freezing decisions at increasing levels of specificity to preserve intent while enabling execution."
+
+1.  **Bounded Decision Phases**: We do not "write docs"; we enter a phase to make decisions.
+2.  **Explicit Encoding**: The decisions are encoded in standardized artifacts (`intent.md`, `design.md`, `plan.md`).
+3.  **Progressive Reduction**: Each phase reduces the initially unbounded space of possibilities.
+4.  **Authoritative Constraints**: Once approved, a Decision Record is **Law**. Downstream work may elaborate, but never contradict it.
+
+This mechanism is domain-agnostic. Whether writing code or authoring a book, GAP enforces the **Freezing of Intent**.
 
 ## 2. The Flow of Cognition (The Kiro Flow)
 Every GAP Protocol must adhere to this 4-step sequence:
@@ -22,15 +28,15 @@ Every GAP Protocol must adhere to this 4-step sequence:
     *   *Output*: `design.md` / `module.md` (The Blueprint).
     *   *Gate*: Approval of Plan.
 
-3.  **Execution (Tasks)**:
+3.  **Policy (Execution Rules)**:
     *   *Input*: Approved Design.
-    *   *Output*: Content Artifacts (`codex.md`, `main.py`).
-    *   *Gate*: Read-Only Frozen Specs.
+    *   *Output*: `policy.md` (Gating Strategy).
+    *   *Gate*: Approval of Design.
 
-4.  **Verification (Proof)**:
-    *   *Input*: Execution Output.
-    *   *Output*: `reflection.md` / Test Results.
-    *   *Gate*: Final "Stamp" of Completion.
+4.  **Plan (Tasks)**:
+    *   *Input*: Approved Design and Policy.
+    *   *Output*: `tasks.md` (The Actions).
+    *   *Gate*: Read-Only Frozen Specs.
 
 ## 3. The Gate Logic
 A "Gate" is a physical barrier in the System.
@@ -40,9 +46,9 @@ A "Gate" is a physical barrier in the System.
 *   **Trigger: `/approve`**: The System moves the file from Proposal -> Live.
 *   **State: Locked**: Once Live, the Agent cannot overwrite without a new Proposal.
 
-## 4. Inheritance Logic
+## 4. Protocol Composition and Isolation
+
 How Projects use Protocols.
 
-*   **Composite**: A Project can use multiple Protocols simultaneously.
-*   **State Isolation**: The "State Machine" of one module (e.g., `software`) does not block the other (e.g., `instructional`).
-*   **Role Binding**: A Project binds specific Agents to specific Protocols (e.g., "The Librarian uses Instructional Protocol").
+Projects may operate multiple GAP Protocols concurrently. Each Protocol maintains an independent decision state machine with isolated approvals, tasks, and execution policies. Protocols do not block or interfere with one another.
+Projects bind agents to specific Protocols through role assignments, defining which agents may propose decisions, decompose tasks, or execute work within each Protocol’s authority boundaries.

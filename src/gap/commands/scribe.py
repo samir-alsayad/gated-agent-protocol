@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 from jinja2 import Environment, FileSystemLoader
 
-from gap.core.manifest import load_manifest, GateType
+from gap.core.manifest import load_manifest
 from gap.core.state import StepStatus
 from gap.core.path import PathManager
 from gap.core.factory import get_ledger
@@ -131,7 +131,7 @@ def create(
         typer.echo(rendered_content)
         return
 
-    if step_def.gate == GateType.MANUAL:
+    if step_def.gate:  # gate: true = requires approval
         # Write to Proposal
         proposal_dir = root / ".gap/proposals"
         proposal_dir.mkdir(parents=True, exist_ok=True)
@@ -149,7 +149,7 @@ def create(
         typer.secho(f"📝 Proposal written to: {proposal_write_path}", fg=typer.colors.YELLOW)
         typer.echo("Run 'gap gate list' to see pending proposals.")
         
-    elif step_def.gate == GateType.AUTO:
+    else:  # gate: false = autonomous
         # Write Directly to Live
         target_path.parent.mkdir(parents=True, exist_ok=True)
         with open(target_path, "w") as f:

@@ -2,12 +2,15 @@
 **Version 1.0 (Embedded Blocks)**
 
 ## 1. Objective
-To enforce **Plan-Derived Access Control**, every artifact that acts as a "Gate Pillar" (e.g., `plan.md`, `diagnosis.md`) MUST contain an embedded, machine-readable Access Control List.
+To enforce **Plan-Derived Access Control**. 
+The ACL is not a separate decision; it is the **technical derivation** of the Task Decision.
 
-## 2. The Logic of Containment
-1.  **Context (Read)**: Agents have open read access to the workspace (to support Embeddings/RAG).
-2.  **Action (Write)**: Write access is **Denied by Default**.
-3.  **Escalation**: To bypass the lock, the Agent must specify an `Access Control` block.
+## 2. The Logic of Derivation
+1.  **Input**: Approved Task (e.g., "Edit `src/main.py`").
+2.  **Derivation**: The Agent proposes the specific ACL block required to execute that Task.
+3.  **Approval**: When the User approves the Task, they implicitly approve the **Minimum Necessary ACL** to perform it.
+4.  **Enforcement**: The Harness enforces the ACL during the Execution Phase.
+
 
 ## 3. The Spec Block
 The implementation uses a standard Markdown Section `## Access Control` containing a standard YAML Code Block.

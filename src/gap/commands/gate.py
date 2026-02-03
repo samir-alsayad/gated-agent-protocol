@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-from gap.core.manifest import load_manifest, GateType
+from gap.core.manifest import load_manifest
 from gap.core.state import StepStatus
 from gap.core.factory import get_ledger
 from gated_agent.security import ACLEnforcer
@@ -81,7 +81,7 @@ def approve(
     enforcer = ACLEnforcer(content=content)
     
     # Warn if no ACL for manual gates
-    if step_def.gate == GateType.MANUAL:
+    if step_def.gate:  # gate: true = requires approval
         if not enforcer.context.allowed_writes and not enforcer.context.allowed_execs:
             typer.secho(
                 "⚠️  Warning: No ACL block found in proposal.",

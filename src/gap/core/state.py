@@ -4,7 +4,7 @@ from typing import Dict, Optional
 from pydantic import BaseModel
 import yaml
 
-from gap.core.manifest import GapManifest, GateType
+from gap.core.manifest import GapManifest
 
 class StepStatus(str, Enum):
     LOCKED = "locked"       # Dependencies not met

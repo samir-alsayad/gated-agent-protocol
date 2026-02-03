@@ -1,5 +1,5 @@
 import pytest
-from gap.core.manifest import GapManifest, Step, GateType
+from gap.core.manifest import GapManifest, Step
 from gap.core.validator import ManifestValidator
 
 
@@ -11,9 +11,9 @@ def test_valid_manifest():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="requirements", artifact="docs/req.md", gate=GateType.MANUAL, needs=[]),
-            Step(step="design", artifact="docs/design.md", gate=GateType.MANUAL, needs=["requirements"]),
-            Step(step="implementation", artifact="docs/impl.md", gate=GateType.AUTO, needs=["design"]),
+            Step(step="requirements", artifact="docs/req.md", gate=True, needs=[]),
+            Step(step="design", artifact="docs/design.md", gate=True, needs=["requirements"]),
+            Step(step="implementation", artifact="docs/impl.md", gate=False, needs=["design"]),
         ]
     )
     
@@ -31,9 +31,9 @@ def test_circular_dependency():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="a", artifact="a.md", gate=GateType.MANUAL, needs=["b"]),
-            Step(step="b", artifact="b.md", gate=GateType.MANUAL, needs=["c"]),
-            Step(step="c", artifact="c.md", gate=GateType.MANUAL, needs=["a"]),
+            Step(step="a", artifact="a.md", gate=True, needs=["b"]),
+            Step(step="b", artifact="b.md", gate=True, needs=["c"]),
+            Step(step="c", artifact="c.md", gate=True, needs=["a"]),
         ]
     )
     
@@ -52,8 +52,8 @@ def test_missing_reference():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="requirements", artifact="docs/req.md", gate=GateType.MANUAL, needs=[]),
-            Step(step="design", artifact="docs/design.md", gate=GateType.MANUAL, needs=["nonexistent"]),
+            Step(step="requirements", artifact="docs/req.md", gate=True, needs=[]),
+            Step(step="design", artifact="docs/design.md", gate=True, needs=["nonexistent"]),
         ]
     )
     
@@ -72,8 +72,8 @@ def test_duplicate_steps():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="requirements", artifact="docs/req1.md", gate=GateType.MANUAL, needs=[]),
-            Step(step="requirements", artifact="docs/req2.md", gate=GateType.MANUAL, needs=[]),
+            Step(step="requirements", artifact="docs/req1.md", gate=True, needs=[]),
+            Step(step="requirements", artifact="docs/req2.md", gate=True, needs=[]),
         ]
     )
     
@@ -92,7 +92,7 @@ def test_self_dependency():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="requirements", artifact="docs/req.md", gate=GateType.MANUAL, needs=["requirements"]),
+            Step(step="requirements", artifact="docs/req.md", gate=True, needs=["requirements"]),
         ]
     )
     
@@ -111,11 +111,11 @@ def test_complex_valid_dag():
         version="1.0.0",
         description="Test protocol",
         flow=[
-            Step(step="a", artifact="a.md", gate=GateType.MANUAL, needs=[]),
-            Step(step="b", artifact="b.md", gate=GateType.MANUAL, needs=[]),
-            Step(step="c", artifact="c.md", gate=GateType.MANUAL, needs=["a", "b"]),
-            Step(step="d", artifact="d.md", gate=GateType.MANUAL, needs=["c"]),
-            Step(step="e", artifact="e.md", gate=GateType.MANUAL, needs=["a"]),
+            Step(step="a", artifact="a.md", gate=True, needs=[]),
+            Step(step="b", artifact="b.md", gate=True, needs=[]),
+            Step(step="c", artifact="c.md", gate=True, needs=["a", "b"]),
+            Step(step="d", artifact="d.md", gate=True, needs=["c"]),
+            Step(step="e", artifact="e.md", gate=True, needs=["a"]),
         ]
     )
     

@@ -40,6 +40,7 @@ Thumbs.db
 
 # Archive (unused protocols for V2+)
 .archive/
+docs/archive/
 
 # GAP Local State
 .gap/
@@ -47,6 +48,8 @@ Thumbs.db
 
 # Testing & Builds
 tmp/
+dist/
+demo/
 site/
 test-results/
 .pytest_cache/

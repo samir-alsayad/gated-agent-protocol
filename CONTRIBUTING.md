@@ -1,24 +1,86 @@
-# Contributing to GAP (Gated Agent Protocol)
+# Contributing to GAP
 
-Thank you for contributing to **GAP (Gated Agent Protocol)**. This project is dedicated to engineering rigor and the **Deterministic Execution of Human Intent**.
+Thank you for your interest in contributing to the **Gated Agent Protocol**!
 
-## 📜 The Golden Rule
+## 🚀 Quick Start
 
-Every contribution MUST be governed by a **Ratified Protocol**. If you are creating a new work-type, you must first define its protocol according to the **[GAP Specification](docs/standards/gap-specification.md)**.
+```bash
+# Clone the repo
+git clone https://github.com/samir-alsayad/gated-agent-protocol.git
+cd gated-agent-protocol
 
-## 🚀 How to Contribute
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate
 
-### 1. Identify your Domain
-Select the appropriate domain in the **[`/domains/`](domains/)** directory. If your domain doesn't exist, propose a new one to the Meta domain.
+# Install in development mode
+pip install -e .
 
-### 2. Follow the Protocol
-Every domain has a `protocol.md` defining its "Operational Gates" and "Semantic Pillars". You MUST follow this protocol for your contribution.
+# Run tests
+pytest tests/ -v
+```
 
-### 3. Configure your Agent
-Consult the **[Agent Steering Standard](docs/standards/agent-steering.md)** to ensure your AI collaborators are aligned with our rigor standards.
+## 📋 Ways to Contribute
 
-### 4. Prove Determinism
-Every project must conclude with evidence proving that all domain **Invariants** have been satisfied.
+### 1. Submit a Protocol
+GAP is extensible through **Protocols** — domain-specific workflows.
+
+To contribute a new protocol:
+1. Create a folder in `src/gap/protocols/your-protocol/`
+2. Add a `manifest.yaml` following the [Protocol Schema](docs/SCHEMA_PROTOCOL.md)
+3. Add templates in `templates/`
+4. Submit a PR
+
+**Example domains we'd love to see:**
+- Research (Hypothesis → Pre-Registration → Experiment → Analysis)
+- Legal (Intake → Research → Draft → Review)
+- Design (Brief → Wireframe → Mockup → Handoff)
+
+### 2. Improve Documentation
+- Fix typos or clarify existing docs
+- Add examples to the `examples/` folder
+- Improve the [Integration Guide](docs/integration_guide.md)
+
+### 3. Add Tests
+We're always looking for better test coverage:
+- CLI integration tests
+- ACL validation tests
+- Edge case handling
+
+### 4. Report Issues
+Found a bug? Open an issue with:
+- Steps to reproduce
+- Expected vs actual behavior
+- Your environment (OS, Python version)
+
+## 🧪 Running Tests
+
+```bash
+# All tests
+pytest tests/ -v
+
+# Specific test file
+pytest tests/test_manifest.py -v
+
+# With coverage
+pytest tests/ --cov=gap --cov-report=html
+```
+
+## 📐 Code Style
+
+- Use type hints for all function signatures
+- Follow PEP 8
+- Keep functions focused and small
+- Add docstrings for public APIs
+
+## 🔒 The Golden Rule
+
+Every contribution should respect the core principle:
+
+> **Agents propose. Humans approve. The Ledger remembers.**
+
+If your change weakens this guarantee, it won't be merged.
 
 ---
-*Rigor is the bridge between prompt and proof.*
+
+*Built with <3 by the Sovereign AI Community.*

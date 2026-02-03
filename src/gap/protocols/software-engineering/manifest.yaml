@@ -8,14 +8,14 @@ flow:
     name: "Requirements & Analysis"
     template: requirements
     artifact: docs/requirements.md
-    gate: manual
+    gate: true
     description: "Define the problem, user stories, and constraints."
 
   - step: design
     name: "Technical Design"
     template: design
     artifact: docs/design.md
-    gate: manual
+    gate: true
     needs: [requirements]
     description: "Architecture, Data Structures, and Interfaces."
 
@@ -23,7 +23,7 @@ flow:
     name: "Implementation Plan"
     template: plan
     artifact: docs/plan.md
-    gate: manual
+    gate: true
     needs: [design]
     description: "Step-by-step execution tasks."
 
@@ -31,7 +31,7 @@ flow:
     name: "Coding"
     template: task
     artifact: docs/task.md
-    gate: auto
+    gate: false
     needs: [plan]
     description: "Tracking the build progress."
 
@@ -39,7 +39,7 @@ flow:
     name: "Verification & Walkthrough"
     template: verification
     artifact: docs/walkthrough.md
-    gate: manual
+    gate: true
     needs: [implementation]
     description: "Proof of work and test results."
 

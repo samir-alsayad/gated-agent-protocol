@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from gap.core.manifest import load_manifest, GateType, GapManifest
+from gap.core.manifest import load_manifest, GapManifest
 
 def test_load_instructional_manifest():
     """Verify we can load the built-in instructional manifest."""
@@ -19,7 +19,7 @@ def test_load_instructional_manifest():
     
     # Check specific steps
     req_step = next(s for s in manifest.flow if s.step == "requirements")
-    assert req_step.gate == GateType.MANUAL
+    assert req_step.gate == True  # gate: true = requires approval
     assert req_step.artifact == "docs/intent.md"
 
 def test_load_software_manifest():
