@@ -121,4 +121,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ---
 
 *Open Standard - v1.0 - 2026*
-*Built with <3 by the Sovereign AI Community.*
+*Created by Samir Alsayad.*
