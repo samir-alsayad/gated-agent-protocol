@@ -1,0 +1,72 @@
+# Meta-Policy Protocol Manifest (Legislative-Flow)
+# Defines a 4-gate state machine for high-stakes governance changes.
+
+id: meta-policy-v1
+version: 1.0.0
+meta:
+  guards:
+    - Consensus
+    - Risk Mitigation
+    - Auditability
+  philosophy: Consensus-Driven Policy
+  prefixes:
+    proposal: "PROP-"
+    risk: "RISK-"
+    audit: "AUDIT-"
+    step: "STEP-"
+
+roles:
+  - id: advocate
+    capability: "Thinking/Policy Design"
+    focus: ["Strategic Goal Alignment", "Community Impact"]
+  - id: critic
+    capability: "Verification/Risk Audit"
+    focus: ["Edge Case Detection", "Security Contraints", "Legal/Ethical Bounds"]
+  - id: arbiter
+    capability: "Coordination/Human Feedback"
+    focus: ["Stakeholder Consensus", "Conflict Resolution"]
+
+gates:
+  - id: gate_proposal
+    pillar: proposal.md
+    responsible_roles: [advocate]
+    logic:
+      mandatory_sections:
+        - Intent and Rationale
+        - Proposed Changes
+    verification_rule: "The proposal MUST state exactly which existing standards it modifies or replaces."
+
+  - id: gate_risk_audit
+    pillar: risk_audit.md
+    depends_on: gate_proposal
+    responsible_roles: [critic]
+    logic:
+      mandatory_sections:
+        - Threat Vector Analysis
+        - Constraint Verification
+    verification_rule: "The audit MUST identify at least 3 potential failure modes of the new policy."
+
+  - id: gate_consensus
+    pillar: feedback.md
+    depends_on: gate_risk_audit
+    responsible_roles: [arbiter]
+    logic:
+      mandatory_sections:
+        - Stakeholder Feedback
+        - Mitigation Strategies
+    verification_rule: "Policy cannot proceed until all 'High-Risk' issues from the audit have a mitigation strategy."
+
+  - id: gate_ratification
+    pillar: tasks.md
+    depends_on: gate_consensus
+    responsible_roles: [advocate, critic]
+    logic:
+      mandatory_sections:
+        - Implementation Path
+        - Audit Plan
+    verification_rule: "The task list MUST account for all mitigation strategies defined in the consensus gate."
+
+final_execution:
+  responsible_role: arbiter
+  objective: "Update the Global Library Standards and publish the Ratification Report."
+  output_format: "Ratified Policy (.md)"

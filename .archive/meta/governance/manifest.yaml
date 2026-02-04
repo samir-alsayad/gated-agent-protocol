@@ -1,0 +1,69 @@
+# Meta-Governance Protocol Manifest (Traceable-Governance Variant)
+# Defines the operational state machine for library policy changes.
+
+id: meta-governance-v1
+version: 1.0.0
+meta:
+  guards:
+    - Operational Integrity
+    - Auditability
+  philosophy: Verifiable Policy Change
+  prefixes:
+    intent: "INTENT-"
+    guardrail: "GRD-META-"
+    step: "STEP-"
+
+# Abstract roles mapped by the local Lab Harness
+roles:
+  - id: strategist
+    capability: "Thinking/Policy Design"
+    focus: ["EARS Compliance", "Objective Specification", "Impact Analysis"]
+  - id: critic
+    capability: "Verification/Security"
+    focus: ["Constraint Analysis", "Boundary Logic", "Consistency Checking"]
+  - id: craft
+    capability: "Action/Implementation"
+    focus: ["Registry Updates", "Audit Path Documentation", "Traceability Mapping"]
+
+gates:
+  - id: gate_policy_intent
+    pillar: requirements.md
+    responsible_roles: [strategist, critic]
+    logic:
+      ears_enforcement: true
+      mandatory_sections:
+        - Introduction
+        - Policy Objectives:
+            grammar: "EARS Syntax"
+        - Expected Outcomes
+    verification_rule: "The Policy Objective MUST be defined with non-ambiguous EARS logic."
+
+  - id: gate_structural_bounds
+    pillar: design.md
+    depends_on: gate_policy_intent
+    responsible_roles: [critic, strategist]
+    logic:
+      consistency_verification: true
+      mandatory_sections:
+        - Structural Guardrails:
+            definition: "Constraints on Library Action"
+        - Verification Properties
+    verification_rule: "Every Guardrail MUST have a corresponding Verification Property."
+
+  - id: gate_deployment_path
+    pillar: tasks.md
+    depends_on: gate_structural_bounds
+    responsible_roles: [craft, critic]
+    logic:
+      audit_path_enforcement: true
+      mandatory_sections:
+        - Overview
+        - Deployment Tasks:
+            meta: ["Intent ID", "Guardrail ID"]
+            formatting: "Traceability Footer Required"
+    verification_rule: "Total task coverage MUST account for 100% of defined Guardrails."
+
+final_execution:
+  responsible_role: craft
+  objective: "Implement the library change and generate a verifiable Compliance Audit."
+  output_format: "Audit Report (.md)"

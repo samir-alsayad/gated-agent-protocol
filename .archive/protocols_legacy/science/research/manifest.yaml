@@ -1,0 +1,83 @@
+# Empirical Research Protocol Manifest (Empirical-Flow)
+# Defines the operational state machine for reproducible discovery.
+
+id: empirical-research-v1
+version: 1.0.0
+meta:
+  guards:
+    - Reproducibility
+    - Falsifiability
+  philosophy: Pre-Registration of Intent
+  prefixes:
+    hypothesis: "HYP-"
+    invariant: "INV-"
+    step: "STEP-"
+
+# Abstract roles mapped by the local Lab Harness
+roles:
+  - id: researcher
+    capability: "Hypothesis Formulation"
+    focus: ["Falsifiable Claims", "EARS Logic", "Hypothesis Capturing"]
+  - id: analyst
+    capability: "Invariant Design"
+    focus: ["Analytical Invariants", "Null Hypothesis Definition", "Statistical Rigor"]
+  - id: engine
+    capability: "Synthesis"
+    focus: ["Data Collection", "Report Generation"]
+
+gates:
+  - id: gate_pre_registration
+    depends_on: null
+    responsible_role: researcher
+    permissions:
+      read: ["docs/**", "schema/**"]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Introduction
+      - Hypotheses:
+          subsections: ["Testable Claim", "Predicted Outcome"]
+          grammar: "EARS Syntax (WHEN [config], THE [system] SHALL [result])"
+      - Variables:
+          subsections: ["Independent", "Dependent", "Control"]
+    verification_rule: "Every hypothesis MUST be falsifiable and defined with measurable EARS logic."
+    output_artifacts:
+      - hypotheses.md
+
+  - id: gate_invariant
+    depends_on: gate_pre_registration
+    responsible_role: analyst
+    permissions:
+      read: ["docs/**", "schema/**", "hypotheses.md"]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Overview
+      - Analytical Invariants:
+          definition: "Statistical or Logical Bounds"
+      - Success Criteria:
+          thresholds: ["p-value", "Confidence Interval", "Error Margin"]
+      - Data Sanitization:
+          approach: "Handling of Outliers/Noise"
+      - Execution Protocol:
+          metadata: ["Hypothesis ID", "Invariant ID"]
+          formatting: "Traceability Footer Required"
+    verification_rule: "Analytical Invariants MUST be locked before data collection begins."
+    output_artifacts:
+      - invariants.md
+
+  - id: gate_synthesis
+    depends_on: gate_invariant
+    responsible_role: engine
+    permissions:
+      read: [workspace]
+      write: invariants.md:access_control # ACL embedded in invariants
+      exec: invariants.md:access_control
+    mandatory_sections:
+      - Introduction
+      - Statistical Results
+      - Falsification Check
+      - Conclusion
+    verification_rule: "Research Report MUST be reproducible and address all pre-registered hypotheses."
+    output_artifacts:
+      - report.md

@@ -1,0 +1,23 @@
+# Analytical Protocol Manifest (Diagnosis & Audit)
+# Defines the gates for evaluating systems and identifying gaps.
+# Role: The Critic / Auditor.
+
+id: analytical-v1
+version: 1.0.0
+meta:
+  principle: Brutal Technical Honesty
+
+gates:
+  - id: gate_diagnosis
+    depends_on: null # Triggered by error logs or scheduled audits
+    responsible_role: auditor
+    permissions:
+      read: [workspace, logs, runtime/storage]
+      write: []
+    mandatory_sections:
+      - Observed Sloppiness
+      - Conceptual Gap
+      - Technical Debt Analysis
+    verification_rule: "Every Diagnosis MUST be backed by a specific log trace or code snippet."
+    output_artifacts:
+      - audit_report.md

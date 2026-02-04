@@ -1,0 +1,51 @@
+kind: protocol
+name: creative-writing
+version: 1.0.0
+description: "The Narrative Arc Protocol (Synopsis -> Characters -> Plot -> Chapters)"
+
+flow:
+  - step: synopsis
+    name: "Story Synopsis"
+    template: synopsis
+    artifact: specs/synopsis.md
+    gate: true
+    description: "The high-level intent and core conflict."
+
+  - step: characters
+    name: "Character Personas"
+    template: characters
+    artifact: specs/characters.md
+    gate: true
+    needs: [synopsis]
+    description: "Defining the agents of the story."
+
+  - step: plot
+    name: "Plot Outline"
+    template: plot
+    artifact: specs/plot.md
+    gate: true
+    needs: [characters]
+    description: "The structural beats of the narrative."
+
+  - step: chapters
+    name: "Chapter Planning"
+    template: chapters
+    artifact: specs/chapters.md
+    gate: true
+    needs: [plot]
+    description: "Breaking the outline into draftable units."
+
+  - step: execution
+    name: "Drafting"
+    template: draft
+    artifact: docs/manuscript.md
+    gate: false
+    needs: [chapters]
+    description: "Writing the prose within approved beats."
+
+templates:
+  synopsis: templates/synopsis.md
+  characters: templates/characters.md
+  plot: templates/plot.md
+  chapters: templates/chapters.md
+  draft: templates/draft.md

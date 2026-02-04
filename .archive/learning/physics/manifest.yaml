@@ -1,0 +1,95 @@
+# Learning Physics Protocol Manifest (Computational-Learning Flow)
+# Defines a 4-gate state machine for learning physics via Python.
+
+id: learning-physics-v1
+version: 1.0.0
+meta:
+  guards:
+    - Pedagogical Rigor
+    - Computational Intuition
+  philosophy: Learning via Simulation and Synthesis
+  prefixes:
+    concept: "CON-"
+    sim: "SIM-"
+    task: "LTASK-"
+
+roles:
+  - id: tutor
+    capability: "Intent Elicitation"
+    focus: ["Concept Mapping", "Gap Identification", "Prerequisite Management"]
+  - id: demonstrator
+    capability: "System Design"
+    focus: ["Simulation Modeling", "Visual Intuition", "Matplotlib/NumPy Orchestration"]
+  - id: coach
+    capability: "Task Planning"
+    focus: ["Lesson Sequencing", "Scaffolding", "Traceability Mapping"]
+  - id: student
+    capability: "Synthesis"
+    focus: ["Computational Problem Solving", "Mastery Documentation"]
+
+gates:
+  - id: gate_concept
+    depends_on: null
+    responsible_role: tutor
+    permissions:
+      read: [workspace]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Target Concept
+      - Learning Objectives
+      - Prerequisites
+    verification_rule: "The concept MUST be broken down into at least 3 falsifiable learning objectives."
+    output_artifacts:
+      - concept.md
+
+  - id: gate_exploration
+    depends_on: gate_concept
+    responsible_role: demonstrator
+    permissions:
+      read: [workspace]
+      write: []
+      exec: [python] # Allowed to test sim viability
+    mandatory_sections:
+      - Physics Model:
+          format: "Mathematical Definition"
+      - Visualization Strategy:
+          tools: ["matplotlib", "vpython"]
+      - Invariants:
+          description: "Conservation laws that must hold in sim"
+    verification_rule: "The simulation design MUST include at least one plot that visualizes an invariant property (e.g., Energy)."
+    output_artifacts:
+      - sim_spec.md
+
+  - id: gate_path
+    depends_on: gate_exploration
+    responsible_role: coach
+    permissions:
+      read: [workspace]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Lesson Steps:
+          metadata: ["Concept ID", "Objective ID"]
+          formatting: "Traceability Footer Required"
+    verification_rule: "The lesson plan MUST cover 100% of defined learning objectives."
+    output_artifacts:
+      - lesson_plan.md
+
+  - id: gate_synthesis
+    depends_on: gate_path
+    responsible_role: student
+    permissions:
+      read: [workspace]
+      write: lesson_plan.md:access_control # Derived from coach-defined scaffolds
+      exec: lesson_plan.md:access_control
+    mandatory_sections:
+      - Solution Commentary:
+          description: "Explanation of the physics logic used"
+      - Simulation Output:
+          description: "Links to generated plots/data"
+      - Mastery Post-Mortem:
+          description: "Reflections on what was learned"
+    verification_rule: "The student's implementation MUST pass all pedagogical checks and sim-invariants."
+    output_artifacts:
+      - mastery_report.md

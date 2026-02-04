@@ -1,0 +1,76 @@
+# UI-UX Design Protocol Manifest (Aesthetic-Flow)
+# Defines the operational state machine for high-fidelity interface design.
+
+id: software-ui-ux-v1
+version: 1.0.0
+meta:
+  guards:
+    - Visual Excellence
+    - Accessibility
+    - Consistency
+  philosophy: User-Centric Synthesis
+  prefixes:
+    intent: "USER-REQ-"
+    guardrail: "UI-PROP-"
+    step: "DESIGN-STEP-"
+
+# Abstract roles mapped by the local Lab Harness
+roles:
+  - id: scout
+    capability: "Thinking/Persona Analysis"
+    focus: ["User Journeys", "Accessibility Standards", "Vibe/Aesthetic Direction"]
+  - id: architect
+    capability: "System Design/Layout"
+    focus: ["Wireframing", "Component Hierarchy", "Color/Typography Theory"]
+  - id: craft
+    capability: "Implementation/Synthesis"
+    focus: ["CSS/HTML Synthesis", "Micro-animations", "Responsiveness"]
+
+gates:
+  - id: gate_intent
+    pillar: user_research.md
+    responsible_roles: [scout, architect]
+    logic:
+      persona_driven: true
+      mandatory_sections:
+        - Introduction
+        - User Personas
+        - User Stories:
+            grammar: "EARS Syntax"
+        - Success Criteria:
+            focus: ["Universal Access", "Performance"]
+    verification_rule: "Every user story MUST be paired with a specific persona and success metric."
+
+  - id: gate_aesthetic_bounds
+    pillar: design_system.md
+    depends_on: gate_intent
+    responsible_roles: [architect, scout]
+    logic:
+      token_enforcement: true
+      mandatory_sections:
+        - Overview
+        - Visual Tokens:
+            subsections: ["Color Palette", "Typography", "Spacing"]
+        - Component Blueprints:
+            format: "Mermaid Blueprint"
+        - Correctness Properties:
+            definition: "Aesthetic Invariants (e.g., 'Contrast shall always be >= 4.5:1')"
+    verification_rule: "Design System MUST define concrete tokens for all UI elements."
+
+  - id: gate_interaction_path
+    pillar: tasks.md
+    depends_on: gate_aesthetic_bounds
+    responsible_roles: [craft, architect]
+    logic:
+      traceable_interactivity: true
+      mandatory_sections:
+        - Overview
+        - Interactive Steps:
+            metadata: ["User Req ID", "UI Property ID"]
+            formatting: "Traceability Footer Required"
+    verification_rule: "The task list MUST account for 100% of defined Accessibility Properties."
+
+final_execution:
+  responsible_role: craft
+  objective: "Synthesize high-fidelity UI that satisfies all Aesthetic Invariants."
+  output_format: "Frontend Code (HTML/CSS/JS)"

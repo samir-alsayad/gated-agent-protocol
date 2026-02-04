@@ -1,0 +1,57 @@
+# Software Maintenance Protocol Manifest (Patch-Flow)
+# Defines a high-velocity state machine for refactoring and patching.
+
+id: software-maintenance-v1
+version: 1.0.0
+meta:
+  guards:
+    - Reliability
+    - Minimal Disruption
+  philosophy: Minimal Invasive Correction
+  prefixes:
+    issue: "ISSUE-"
+    fix: "FIX-"
+    step: "STEP-"
+
+roles:
+  - id: troubleshooter
+    capability: "Diagnosis"
+    focus: ["Log Analysis", "Root Cause Discovery", "Regression Identification"]
+  - id: craft
+    capability: "Synthesis"
+    focus: ["Patch Generation", "Unit Testing", "Walkthrough Generation"]
+
+gates:
+  - id: gate_diagnosis
+    depends_on: null
+    responsible_role: troubleshooter
+    permissions:
+      read: [workspace]
+      write: []
+      exec: [grep, cat, curl, pytest]
+    mandatory_sections:
+      - Issue Description
+      - Root Cause Analysis
+      - Impact Assessment
+      - Repair Strategy
+      - Implementation Steps:
+          metadata: ["Issue ID"]
+          formatting: "Traceability Footer Required"
+    verification_rule: "The diagnosis MUST identify root cause and propose a traceable fix path."
+    output_artifacts:
+      - diagnosis.md
+
+  - id: gate_synthesis
+    depends_on: gate_diagnosis
+    responsible_role: craft
+    permissions:
+      read: [workspace]
+      write: diagnosis.md:access_control # ACL embedded in diagnosis
+      exec: diagnosis.md:access_control
+    mandatory_sections:
+      - Changes Made
+      - What Was Tested
+      - Validation Results
+    verification_rule: "The patch MUST satisfy all diagnostic requirements and pass verification tests."
+    output_artifacts:
+      - walkthrough.md

@@ -1,0 +1,23 @@
+# Instructional Protocol Manifest (Content Drafting)
+# Defines the gates for teaching, guidance, and atom authoring.
+# Role: The Helper / Author.
+
+id: instructional-v1
+version: 1.0.0
+meta:
+  principle: Clear, Actionable, Theory-Backed Guidance
+
+gates:
+  - id: gate_draft
+    depends_on: descriptive-v1:gate_blueprint
+    responsible_role: author
+    permissions:
+      read: [workspace, spec.md, templates/atoms]
+      write: []
+    mandatory_sections:
+      - Theory Section: "First Principles"
+      - Experiment Section: "Actionable Mission"
+      - Verification List: "Success Criteria"
+    verification_rule: "The Atom MUST cover at least one checkbox from the approved Descriptive Spec."
+    output_artifacts:
+      - draft_atom.md

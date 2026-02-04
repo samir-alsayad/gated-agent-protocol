@@ -39,7 +39,7 @@ Thumbs.db
 .protocol/
 
 # Archive (unused protocols for V2+)
-.archive/
+# .archive/
 docs/archive/
 
 # GAP Local State

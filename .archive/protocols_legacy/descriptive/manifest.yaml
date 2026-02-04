@@ -1,0 +1,23 @@
+# Descriptive Protocol Manifest (Blueprint & Spec)
+# Defines the gates for architectural design and mental modeling.
+# Role: The Proposer / Architect.
+
+id: descriptive-v1
+version: 1.0.0
+meta:
+  principle: Design-First Implementation
+
+gates:
+  - id: gate_blueprint
+    depends_on: strategic-v1:gate_adoption
+    responsible_role: architect
+    permissions:
+      read: [workspace, roadmap.md]
+      write: []
+    mandatory_sections:
+      - System Overview
+      - Mermaid Flowchart
+      - Atom Checklist: "Exactly what will be written"
+    verification_rule: "The Atom Checklist MUST match the scope defined in the Strategic Adopted Roadmap."
+    output_artifacts:
+      - spec.md

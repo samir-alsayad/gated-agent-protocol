@@ -1,0 +1,7 @@
+kind: project
+name: secure-agent-demo
+version: 1.0.0
+description: "A project that requires approval for EVERY step."
+flow: []
+checkpoints:
+  strategy: every  # <--- The Policy: Stop for everything.

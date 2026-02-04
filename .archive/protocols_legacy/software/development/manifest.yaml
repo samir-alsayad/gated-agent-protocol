@@ -1,0 +1,98 @@
+# Software Development Protocol Manifest (Specs-First Variant)
+# Defines the operational state machine for high-rigor engineering.
+
+id: software-development-v1
+version: 1.0.0
+meta:
+  guards:
+    - Determinism
+    - Traceability
+    - Correctness
+  philosophy: Specs-First Architecture
+  prefixes:
+    requirement: "REQ-"
+    property: "PROP-"
+    task: "STEP-"
+
+# Abstract roles mapped by the local Lab Harness
+roles:
+  - id: analyst
+    capability: "Intent Elicitation"
+    focus: ["Context Capture", "Goal Definition", "EARS Constraints"]
+  - id: architect
+    capability: "System Design"
+    focus: ["Interface Definition", "Mermaid Diagrams", "Formal Invariants"]
+  - id: planner
+    capability: "Task Planning"
+    focus: ["Step Decomposition", "Traceability Mapping"]
+  - id: craft
+    capability: "Implementation"
+    focus: ["Code Generation", "Property-Based Testing", "Walkthrough Generation"]
+
+gates:
+  - id: gate_intent
+    depends_on: null
+    responsible_role: analyst
+    permissions:
+      read: [workspace]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Context
+      - Goals
+      - Constraints:
+          grammar: "EARS Syntax (WHEN..THE SHALL / IF..THEN THE SHALL)"
+    verification_rule: "Every goal MUST have at least one constraint that bounds its behavior."
+    output_artifacts:
+      - intent.md
+
+  - id: gate_invariant
+    depends_on: gate_intent
+    responsible_role: architect
+    permissions:
+      read: [workspace]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Architecture:
+          format: "Mermaid Blueprint"
+      - Properties:
+          definition: "Invariants that must hold"
+      - Dependencies
+      - Data Models
+    verification_rule: "Every property MUST validate at least one Goal ID."
+    output_artifacts:
+      - spec.md
+
+  - id: gate_path
+    depends_on: gate_invariant
+    responsible_role: planner
+    permissions:
+      read: [workspace]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Implementation Steps:
+          metadata: ["Goal ID", "Constraint ID", "Property ID"]
+          formatting: "Traceability Footer Required"
+    verification_rule: "Total step coverage MUST account for 100% of defined Goals and Properties."
+    output_artifacts:
+      - plan.md
+
+  - id: gate_synthesis
+    depends_on: gate_path
+    responsible_role: craft
+    permissions:
+      read: [workspace]
+      write: plan.md:access_control  # Derived from human-approved Embedded ACL
+      exec: plan.md:access_control   # Derived from human-approved Embedded ACL
+    mandatory_sections:
+      - Changes Made:
+          description: "Files created or modified with brief rationale"
+      - What Was Tested:
+          description: "Verification steps performed"
+      - Validation Results:
+          description: "Proof of correctness (test output, screenshots, etc.)"
+    verification_rule: "Implementation MUST satisfy all gated artifacts and approved ACL constraints."
+    output_artifacts:
+      - walkthrough.md

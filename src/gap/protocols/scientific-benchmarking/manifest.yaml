@@ -1,0 +1,51 @@
+kind: protocol
+name: scientific-benchmarking
+version: 1.0.0
+description: "The Experimental Method (Hypothesis -> Methodology -> Safety -> Experiments)"
+
+flow:
+  - step: hypothesis
+    name: "Core Hypothesis"
+    template: hypothesis
+    artifact: specs/hypothesis.md
+    gate: true
+    description: "The measurable prediction being tested."
+
+  - step: methodology
+    name: "Experimental Methodology"
+    template: methodology
+    artifact: specs/methodology.md
+    gate: true
+    needs: [hypothesis]
+    description: "How the prediction will be measured."
+
+  - step: safety
+    name: "Safety & Governance"
+    template: safety
+    artifact: specs/safety.md
+    gate: true
+    needs: [methodology]
+    description: "Ethical and safety boundaries (ACL for science)."
+
+  - step: experiments
+    name: "Experimental Tasks"
+    template: experiments
+    artifact: specs/experiments.md
+    gate: true
+    needs: [safety]
+    description: "Order of execution for test cases."
+
+  - step: execution
+    name: "Trial Generation"
+    template: trial
+    artifact: docs/raw_data.md
+    gate: false
+    needs: [experiments]
+    description: "Running the trials and recording data."
+
+templates:
+  hypothesis: templates/hypothesis.md
+  methodology: templates/methodology.md
+  safety: templates/safety.md
+  experiments: templates/experiments.md
+  trial: templates/trial.md

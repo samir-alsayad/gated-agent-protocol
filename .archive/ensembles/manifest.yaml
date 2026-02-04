@@ -1,0 +1,70 @@
+# Ensemble Coordination Protocol Manifest (Gated-Reasoning Variant)
+# Defines the operational state machine for multi-model alignment.
+
+id: ensemble-coordination-v1
+version: 1.0.0
+meta:
+  guards:
+    - Coherence
+    - Resource Efficiency
+  philosophy: Multi-Model Synergy
+  prefixes:
+    objective: "OBJ-"
+    guardrail: "GRD-"
+    step: "STEP-"
+
+# Abstract roles mapped by the local Lab Harness
+roles:
+  - id: strategist
+    capability: "Thinking/Abstraction"
+    focus: ["Cross-Model Alignment", "Reasoning Specification", "Policy Formulation"]
+  - id: critic
+    capability: "Verification/Audit"
+    focus: ["Semantic Agreement", "Resource Constraint Checking", "Boundary Enforcement"]
+  - id: craft
+    capability: "Orchestration/Synthesis"
+    focus: ["Hand-off Sequencing", "Prompt Injection", "Final Result Integration"]
+
+gates:
+  - id: gate_intent
+    pillar: intent.md
+    responsible_roles: [strategist, critic]
+    logic:
+      ears_enforcement: true
+      mandatory_sections:
+        - Performance Goal
+        - Role Specialization Matrix
+        - Collaborative Objectives:
+            grammar: "EARS Syntax"
+    verification_rule: "The Role Matrix MUST specify why an ensemble is superior to a single agent for this task."
+
+  - id: gate_guardrails
+    pillar: guardrails.md
+    depends_on: gate_intent
+    responsible_roles: [critic, strategist]
+    logic:
+      resource_validation: true
+      mandatory_sections:
+        - Resource Invariants:
+            requirements: ["VRAM usage bounds", "Context Window limits"]
+        - Semantic Agreement Logic:
+            definition: "Failure conditions for model hand-offs"
+    verification_rule: "Ensemble combined memory usage MUST NOT exceed system swap thresholds."
+
+  - id: gate_orchestration
+    pillar: orchestration.md
+    depends_on: gate_guardrails
+    responsible_roles: [craft, critic]
+    logic:
+      traceable_handoffs: true
+      mandatory_sections:
+        - Hand-off Sequence:
+            meta: ["Source Model", "Target Model", "Context Payload"]
+        - Prompt Injection Schemas:
+            focus: ["Preserving intent across calls"]
+    verification_rule: "Every hand-off MUST include a verification step to prevent semantic drift."
+
+final_execution:
+  responsible_role: craft
+  objective: "Execute the orchestrated sequence and synthesize the collective result."
+  output_format: "Task-dependent"

@@ -1,0 +1,91 @@
+# Science Benchmarking Protocol Manifest (Benchmark-Flow)
+# Defines a 4-gate high-rigor state machine for reproducible benchmarks.
+
+id: science-benchmarking-v1
+version: 1.0.0
+meta:
+  guards:
+    - Statistical Rigor
+    - Reproducibility
+    - Measurement Rigor
+  philosophy: End-to-End Traceable Benchmarking
+  prefixes:
+    hypothesis: "HYP-"
+    instrument: "INST-"
+    metric: "MET-"
+    step: "STEP-"
+
+roles:
+  - id: scientist
+    capability: "Hypothesis Formulation"
+    focus: ["Falsifiable Claims", "Variable Isolation"]
+  - id: engineer
+    capability: "Instrumentation Design"
+    focus: ["Benchmarking Loops", "Telemetry Injection", "Hardware Isolation"]
+  - id: auditor
+    capability: "Data Auditing"
+    focus: ["Measurement Rigor", "Integrity Verification"]
+  - id: analyst
+    capability: "Synthesis"
+    focus: ["Statistical Analysis", "Report Generation", "Visualization"]
+
+gates:
+  - id: gate_hypothesis
+    depends_on: null
+    responsible_role: scientist
+    permissions:
+      read: [README.md]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Research Questions
+      - Null Hypotheses
+    verification_rule: "Every hypothesis MUST be defined with a null hypothesis and a predicted effect size."
+    output_artifacts:
+      - hypotheses.md
+
+  - id: gate_instrumentation
+    depends_on: gate_hypothesis
+    responsible_role: engineer
+    permissions:
+      read: [workspace]
+      write: []
+      exec: [lscpu, uname, free, sysctl]
+    mandatory_sections:
+      - Instrumentation Strategy
+      - Telemetry Map
+      - Hardware Bounds
+    verification_rule: "The design MUST specify how environmental noise (e.g. CPU jitter) will be mitigated."
+    output_artifacts:
+      - instrumentation.md
+
+  - id: gate_audit
+    depends_on: gate_instrumentation
+    responsible_role: auditor
+    permissions:
+      read: ["data/**"]
+      write: []
+      exec: [shasum, du, head]
+    mandatory_sections:
+      - Raw Data Integrity
+      - Outlier Removal Protocol
+    verification_rule: "Raw data MUST be audited for corruption or leakage before formal analysis."
+    output_artifacts:
+      - data_audit.md
+
+  - id: gate_synthesis
+    depends_on: gate_audit
+    responsible_role: analyst
+    permissions:
+      read: [workspace]
+      write: data_audit.md:access_control # ACL embedded in data_audit
+      exec: data_audit.md:access_control
+    mandatory_sections:
+      - Statistical Results
+      - Falsification Check
+      - Executive Summary
+      - Key Findings
+    verification_rule: "Analysis MUST report significance level (p) and synthesize into a peer-review ready format."
+    output_artifacts:
+      - analysis.md
+      - report.md

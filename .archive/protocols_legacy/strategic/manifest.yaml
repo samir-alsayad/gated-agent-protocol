@@ -1,0 +1,51 @@
+# Strategic Protocol Manifest (Roadmap & Pivot)
+# Defines the operational gates for high-level goal setting and strategic advancement.
+# Role: The Optimizer / Strategist.
+
+id: strategic-v1
+version: 1.0.0
+meta:
+  guards:
+    - Alignment with First Principles
+    - Resource Feasibility
+    - Narrative Consistency
+  philosophy: "Strategy is the art of choosing the right Pillar."
+
+roles:
+  - id: strategist
+    capability: "Roadmap Orchestration"
+    focus: ["Pillar Definition", "Campaign Sizing", "Dependency Resolution"]
+    description: "Defines 'What' we are doing and 'Why' we are doing it."
+
+gates:
+  - id: gate_pivot
+    depends_on: null # The trigger for a new direction
+    responsible_role: strategist
+    permissions:
+      read: [workspace, logs, audit_reports]
+      write: []
+      exec: []
+    mandatory_sections:
+      - Strategic Context: "Why is this pivot necessary?"
+      - Proposed Goal Change: "The new Source of Truth"
+      - Impact Analysis: "Which existing Campaigns/Atoms are affected?"
+    verification_rule: "The pivot MUST be supported by at least one Analytical Audit."
+    output_artifacts:
+      - pivot_proposal.md
+
+  - id: gate_adoption
+    depends_on: gate_pivot
+    responsible_role: human_steward # YOU
+    permissions:
+      read: [pivot_proposal.md]
+      write: 
+        - roadmap.md
+        - task.md
+        - "curriculum/campaigns/**/README.md"
+    mandatory_sections:
+      - Signed Approval
+    verification_rule: "The artifact changes MUST match the approved Pivot Proposal exactly."
+    output_artifacts:
+      - roadmap.md
+      - task.md
+      - "**/README.md"

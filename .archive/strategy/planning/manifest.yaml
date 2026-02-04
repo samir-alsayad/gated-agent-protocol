@@ -1,0 +1,69 @@
+# Strategic Planning Protocol Manifest (Strategic-Flow)
+# Defines the operational state machine for high-level objective alignment.
+
+id: strategic-planning-v1
+version: 1.0.0
+meta:
+  guards:
+    - Alignment
+    - Resource Bounds
+  philosophy: Intent-Driven Operations
+  prefixes:
+    objective: "OBJ-"
+    guardrail: "GRD-STRAT-"
+    step: "STEP-"
+
+roles:
+  - id: strategist
+    capability: "Thinking/Strategic Abstraction"
+    focus: ["OKRs", "Market/Resource Analysis", "KPI Definition"]
+  - id: critic
+    capability: "Verification/Risk Audit"
+    focus: ["Operational Guardrails", "Conflict Detection", "Constraint Analysis"]
+  - id: craft
+    capability: "Action/Roadmap Synthesis"
+    focus: ["Milestone Sequencing", "Resource Allocation", "Traceability Mapping"]
+
+gates:
+  - id: gate_objectives
+    pillar: objectives.md
+    responsible_roles: [strategist, critic]
+    logic:
+      ears_enforcement: true
+      mandatory_sections:
+        - Introduction
+        - Strategic Objectives (OKRs):
+            grammar: "EARS Syntax (UNLESS..THE SHALL / IF..THE SHALL)"
+        - Target Metrics (KPIs)
+    verification_rule: "Every objective MUST be defined with a non-ambiguous EARS condition and a measurable KPI."
+
+  - id: gate_operational_guardrails
+    pillar: guardrails.md
+    depends_on: gate_objectives
+    responsible_roles: [critic, strategist]
+    logic:
+      risk_verification: true
+      mandatory_sections:
+        - Operational Guardrails:
+            definition: "Constraints on Resource/Risk"
+        - Conflict Matrix:
+            definition: "Handling of competing objectives"
+    verification_rule: "Every Guardrail MUST bound a specific strategic risk identified in the objectives."
+
+  - id: gate_roadmap
+    pillar: roadmap.md
+    depends_on: gate_operational_guardrails
+    responsible_roles: [craft, critic]
+    logic:
+      traceable_sequencing: true
+      mandatory_sections:
+        - Overview
+        - Milestone Sequence:
+            metadata: ["Objective ID", "Guardrail ID"]
+            formatting: "Traceability Footer Required"
+    verification_rule: "The roadmap MUST account for 100% of defined Strategic Objectives."
+
+final_execution:
+  responsible_role: craft
+  objective: "Synthesize the final Strategic Roadmap and Operational Brief."
+  output_format: "Strategic Roadmap (.md)"

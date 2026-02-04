@@ -1,0 +1,18 @@
+kind: project
+name: my-webapp
+version: 1.0.0
+description: "A secure web application"
+flow:
+  - step: requirements
+    artifact: specs/requirements.md
+    gate: false
+  
+  - step: design
+    artifact: specs/design.md
+    needs: [requirements]
+    gate: true
+
+checkpoints:
+  strategy: explicit
+  after_tasks:
+    - deploy_prod

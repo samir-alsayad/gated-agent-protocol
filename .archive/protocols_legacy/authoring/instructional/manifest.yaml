@@ -1,0 +1,77 @@
+# Learning Protocol Manifest (Curriculum-Generator)
+# Defines a 3-gate rigorous state machine for autonomous curriculum generation.
+# Scope: Documentation Only (No Execution).
+# Based on Science Benchmarking Parity (Strict ACLs).
+
+id: authoring-instructional-v1
+version: 1.0.0
+meta:
+  guards:
+    - Clarity of Instruction
+    - Actionability
+    - Safety
+  philosophy: "Enable Action through Structured Guidance"
+  prefixes:
+    atom: "TUTORIAL-"
+    module: "MISSION-"
+    campaign: "COURSE-"
+
+roles:
+  - id: dispatcher
+    capability: "Diagnosis"
+    focus: ["Problem Analysis", "Concept Mapping", "Triage"]
+    description: "Identifies the missing concept behind a user error."
+  - id: navigator
+    capability: "Structural Design"
+    focus: ["Syllabus Design", "Dependency Management", "Roadmap"]
+    description: "Architects the learning path (Roadmap)."
+  - id: author
+    capability: "Content Generation"
+    focus: ["Theory Explanation", "Pattern Definition", "Mission Sizing"]
+    description: "Writes the actual lesson content (Atoms/Modules)."
+
+gates:
+  - id: gate_triage
+    depends_on: null
+    responsible_role: dispatcher
+    permissions:
+      read: [workspace, logs]
+      write: [recommendation.md]
+      exec: []
+    mandatory_sections:
+      - Observed Error / Gap
+      - Missing Concept
+      - Recommended Path
+    verification_rule: "The recommendation MUST link to a valid node in the Concept Map."
+    output_artifacts:
+      - recommendation.md
+
+  - id: gate_structure
+    depends_on: gate_triage
+    responsible_role: navigator
+    permissions:
+      read: [recommendation.md, curriculum/meta]
+      write: ["curriculum/roadmap.md"]
+      exec: []
+    mandatory_sections:
+      - Level Goals
+      - Module List
+      - Atomic Unit List
+    verification_rule: "The Roadmap MUST cover the gap identified in Triage."
+    output_artifacts:
+      - curriculum/roadmap.md
+
+  - id: gate_definition
+    depends_on: gate_structure
+    responsible_role: author
+    permissions:
+      read: ["curriculum/roadmap.md", "templates"]
+      write: ["curriculum/campaigns/**"]
+      exec: []
+    mandatory_sections:
+      - Theory (First Principles)
+      - Pattern (Transfer Learning)
+      - Mission (Ground Zero)
+    verification_rule: "The Pattern MUST be a code example in a DIFFERENT context than the Mission."
+    output_artifacts:
+      - "curriculum/campaigns/**/*.md"

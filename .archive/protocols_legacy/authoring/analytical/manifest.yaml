@@ -1,0 +1,36 @@
+# Analytical Protocol Manifest (The Critic)
+# Defines a high-rigor state machine for diagnosis and review.
+# Scope: Diagnosis Only. No Code Execution.
+
+id: authoring-analytical-v1
+version: 1.0.0
+meta:
+  guards:
+    - Objectivity
+    - Root Cause Analysis
+    - Evidence-Based
+  philosophy: "Diagnose, Don't Fix."
+  prefixes:
+    report: "REPORT-"
+    triage: "TRIAGE-"
+
+roles:
+  - id: analyst
+    capability: "Review"
+    focus: ["Code Review", "Error Analysis", "Gap Analysis"]
+
+gates:
+  - id: gate_triage
+    depends_on: null
+    responsible_role: analyst
+    permissions:
+      read: [workspace, logs]
+      write: [triage_report.md]
+      exec: []
+    mandatory_sections:
+      - Observed Behavior
+      - Expected Behavior
+      - Evidence
+    verification_rule: "Must cite specific lines of code or log entries."
+    output_artifacts:
+      - triage_report.md
