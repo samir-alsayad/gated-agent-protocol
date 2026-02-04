@@ -15,5 +15,5 @@ All instructional requirements MUST use **EARS** (Easy Approach to Requirements 
 *   **R-04**: **THE** system **SHALL** {{ general_requirement }}.
 
 ---
-**The Golden Thread (Trinity)**:
-These Requirements are the **immutable truth**. Every Design Property must validate one of these, and every Task must implement a Property.
+**The Compliance Chain**:
+These Requirements are the **primary source**. Every Design Property must validate one of these, and every Task must implement a Property.

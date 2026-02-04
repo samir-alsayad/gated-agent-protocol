@@ -1,7 +1,7 @@
 # GAP v1.0 Release Plan
 
 ## Current State
-- **Docs**: ✅ Canonical (Whitepaper v2, Schema Trinity, Integration Guide).
+- **Docs**: ✅ Canonical (Whitepaper v2, Schema Standards, Integration Guide).
 - **Code**: 🟡 Sprint 1 Complete (Critical bugs fixed), but does NOT reflect new concepts.
 
 ---

@@ -1,7 +1,7 @@
 kind: protocol
 name: software-engineering
 version: 0.1.0
-description: "The Sovereign Standard for Software Development (Reqs -> Plan -> Code -> Verify)."
+description: "The Standard Protocol for Software Development (Reqs -> Plan -> Code -> Verify)."
 
 flow:
   - step: requirements

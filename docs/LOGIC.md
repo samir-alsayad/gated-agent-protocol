@@ -15,7 +15,7 @@
 
 This mechanism is domain-agnostic. Whether writing code or authoring a book, GAP enforces the **Freezing of Intent**.
 
-## 2. The Flow of Cognition (The Kiro Flow)
+## 2. The Standard Workflow (The GAP Flow)
 Every GAP Protocol must adhere to this 4-step sequence:
 
 1.  **Intent (Requirements)**:

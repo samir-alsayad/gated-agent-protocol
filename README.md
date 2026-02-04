@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
 
-GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents AI from hallucinating requirements or skipping safety checks by strictly enforcing a "State Machine of Work".
+GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a "Workflow Compliance Layer".
 
 ---
 
@@ -13,7 +13,7 @@ GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Tr
 
 - Python 3.10+
 - macOS, Linux, or Windows
-- No external services required (optional: PostgreSQL for SQL ledger)
+- No external services required (Standard YAML/File-based Ledger)
 
 ---
 
@@ -95,7 +95,7 @@ Every phase has a **Gate** (`gate: true` or `gate: false`):
 - `true` = Requires supervisor approval before proceeding
 - `false` = Autonomous execution allowed
 
-### The State Machine
+### Workflow Compliance
 
 GAP enforces a strict **Chain of Custody**:
 
@@ -105,14 +105,14 @@ Requirements → Design → Policy → Tasks → Execution
    (gate)      (gate)    (gate)   (gate)    (ACL)
 ```
 
-If an Agent tries to skip a phase, GAP blocks it.
+If an Agent tries to skip a compliance phase, GAP blocks it.
 
 ### Checkpoints
 
 During execution, the Harness can pause at designated points:
 - `explicit` = Pause only at listed task IDs
 - `every` = Pause after every task
-- `batch` = Run all, review at end
+- `batch` = Run all, review at the end
 
 ---
 

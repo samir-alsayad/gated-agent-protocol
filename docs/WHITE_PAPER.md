@@ -1,19 +1,17 @@
 # GAP: The Gated Agent Protocol (v2.0)
-**The Sovereign Standard for Human-AI Collaboration**
+**The Open Standard for Managed Agentic Workflows**
 
 ---
 
-## 1. The Crisis of Autonomy: Probabilistic Drift
+## 1. The Challenge: Contextual Drift
 
-As Large Language Models (LLMs) transition from chat interfaces to autonomous agents, they encounter a fundamental barrier: **Probabilistic Drift**.
+As Large Language Models (LLMs) transition from chat interfaces to autonomous agents, they encounter a fundamental reliability challenge: **Contextual Drift**.
 
-In a chat session, a hallucination is a nuisance. In an autonomous agent, it is a structural failure. Without rigid synchronization points, long-horizon agentic workflows diverge from human intent, with the probability of alignment ($p$) decaying exponentially over time ($t$): 
+In simple chat sessions, minor deviations are annoying but harmless. In autonomous agentic workflows, however, "hallucinations" or deviations from intent become structural failures. Without rigid synchronization points, long-horizon workflows tend to diverge from the original human requirements as the context window shifts or the agent prioritizes immediate task completion over architectural constraints.
 
-$$p(t) \to 0$$
+Current solutions often rely on "prompt engineering" to plead with the model to stay on track. **We propose a systems engineering approach: The Gated Agent Protocol (GAP).**
 
-Current solutions—"Planning Mode" toggles or simple sandboxes—are insufficient. They either rely on the model's self-restraint (which fails under pressure) or blind the agent completely (reducing utility).
-
-**We propose the Gated Agent Protocol (GAP)**: A Cybernetic Constitution that governs agent behavior through machine-enforceable state machines. GAP transforms probabilistic generation into verifiable engineering.
+GAP is a **Workflow Enforcement Protocol** that governs agent behavior through machine-enforceable state machines. It transforms probabilistic generation into verifiable engineering compliance.
 
 ---
 
@@ -21,25 +19,25 @@ Current solutions—"Planning Mode" toggles or simple sandboxes—are insufficie
 
 GAP enforces a strict **Chain of Custody** for every action an Agent takes. It divides work into five distinct phases, each with its own artifact and verification gate.
 
-### The Phases of Sovereignty
+### The Phases of Execution
 
 1.  **Requirements (The Source)**
     *   **Goal**: Define *what* is needed without ambiguity.
     *   **Artifact**: `requirements.md`
-    *   **Standard**: **EARS** (Easy Approach to Requirements Syntax).
+    *   **Format Standard**: **EARS** (Recommended) or clear acceptance criteria.
     *   *Example*: "WHEN the user clicks Save, THE System SHALL validate the schema."
 
-2.  **Design (The Bridge)**
-    *   **Goal**: Define *how* to solve it and prove correctness.
+2.  **Design (The Blueprint)**
+    *   **Goal**: Define *how* to solve it.
     *   **Artifact**: `design.md`
-    *   **Standard**: **Correctness Properties**.
+    *   **Validation**: **Design-to-Requirement Mapping**.
     *   *Example*: "**Validates: Requirement 1.2** - The schema validator uses strict typing."
 
-3.  **Execution Policy (The Rules)**
-    *   **Goal**: Define the boundaries of the mission.
+3.  **Execution Policy (The Governance)**
+    *   **Goal**: Define the permissions and boundaries of the session.
     *   **Artifact**: `policy.md` (Configuration Declaration).
-    *   **Standard**: **Law vs Exception**.
-    *   *Example*: "We declare an Exception to run in Autonomous Mode for this session."
+    *   **Concept**: **Law vs Exception**.
+    *   *Example*: "Exception: Grant write access to `src/` for this session."
 
 4.  **Tasks (The Plan)**
     *   **Goal**: Break the design into atomic units of work.
@@ -48,60 +46,60 @@ GAP enforces a strict **Chain of Custody** for every action an Agent takes. It d
     *   *Example*: "Task 1: Implement Validator (Traces to Property 2)."
 
 5.  **Execution (The Action)**
-    *   **Goal**: Do the work.
+    *   **Goal**: Perform the work.
     *   **Artifact**: `walkthrough.md`.
-    *   **Standard**: **The Harness**. The Agent is locked into the approved Task ACLs.
+    *   **Constraint**: **The Harness**. The Agent is restricted to the approved Task ACLs.
 
 ---
 
-## 3. The Traceability Trinity
+## 3. Compliance & Traceability
 
-GAP introduces a "Golden Thread" that links high-level intent to low-level code. This is enforced via the **Traceability Trinity**:
+GAP introduces a **Compliance Chain** that links high-level intent to low-level code. This is enforced via **Use-Case Traceability**:
 
-1.  **Requirement (EARS)**: The immutable truth.
-2.  **Property (Design)**: The logical proof that validates the Requirement.
-3.  **Checklist (Task)**: The unit of work that implements the Property.
+1.  **Requirement**: The immutable need.
+2.  **Property**: The logical design decision.
+3.  **Checklist**: The implementation step.
 
 **Why this matters**:
-If an Agent tries to edit a file that isn't linked to a Task, which isn't linked to a Property, which isn't linked to a Requirement... **The Harness blocks it.**
+In a compliant workflow, an Agent cannot edit a file unless that action is linked to a Task, which implicitly links it to a Design and Requirement. This prevents "shadow engineering" where agents create code that serves no documented purpose.
 
-Code cannot exist without a pedigree.
+Code must have a distinct pedagogical pedigree.
 
 ---
 
 ## 4. Governance: Law and Exception
 
-GAP solves the rigidness problem of traditional sandboxes with the **Law and Exception** model.
+GAP solves the rigidity problem of traditional sandboxes with the **Law and Exception** model, inspired by reliable systems engineering practices.
 
 ### 1. The Project Manifest (The Law)
 *   Located at `.gap/manifest.yaml`.
-*   Version-controlled (e.g., Git) or otherwise treated as immutable.
-*   Defines the defaults: "This project is Gated. Task scope is Function-Level."
+*   Version-controlled (e.g., Git).
+*   Defines the immutable defaults: "This project is Gated. Default scope is Function-Level."
 
 ### 2. The Session Config (The Exception)
 *   Located at `.gap/sessions/[id]/config.yaml`.
 *   Temporary, explicit, logged.
-*   Defines the deviation: "For *this* session, I authorize Autonomous Mode."
+*   Defines the approved deviation: "For *this* session, enable Autonomous Mode."
 
 This ensures that safety is the default, but flexibility is possible—provided it is explicitly declared and auditable.
 
 ### 3. Execution Checkpoints
-The Harness enforces mandatory pause points during Task execution.
+The Harness enforces mandatory pause points during Task execution, acting as a CI/CD pipeline for agent decisions.
 
-*   **Strategy**: Defined in the Policy (`checkpoints.strategy`).
-    *   `explicit`: Pause only at listed Task IDs (`after_tasks: [2.1, 3.4]`).
-    *   `every`: Pause after every single Task.
-    *   `batch`: Run all Tasks, review at the end.
-*   **Mechanism**: At each checkpoint, the Agent is frozen until the Human (or Supervisor) explicitly approves continuation.
-*   **Purpose**: Prevents runaway execution. Guarantees a human "pulse check" on long-horizon work.
+*   **Strategy**: Defined in the Policy.
+    *   `explicit`: Pause only at listed Task IDs.
+    *   `every`: Pause after every single Task (High Security).
+    *   `batch`: Run all Tasks, review at the end (High Autonomy).
+*   **Mechanism**: At each checkpoint, the Agent verifies its state against the Ledger.
+*   **Purpose**: Prevents runaway execution/billing. Guarantees a human "pulse check" on long-horizon work.
 
 ---
 
 ## 5. Conclusion
 
-GAP is not just a prompting strategy; it is a **Protocol**. Just as TCP/IP governs the flow of packets, GAP governs the flow of agentic work.
+GAP is **Infrastructure for Agents**. Just as CI/CD pipelines govern the deployment of code, GAP governs the generation of code.
 
-By embedding Security into the Specification and enforcing Traceability through the Trinity, we enable a future where autonomous agents are not just powerful, but **Trustworthy**.
+By embedding Compliance into the Specification and enforcing Traceability through the Ledger, we enable a future where autonomous agents are not just powerful, but **Reliable**.
 
 ---
 *Open Standard - v2.0 - 2026*
