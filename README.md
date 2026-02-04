@@ -7,7 +7,7 @@
 
 GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a "Workflow Compliance Layer".
 
-## 🌍 The 4 Domains of Sovereignty
+## 🌍 4 Example Domains
 
 GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
 
