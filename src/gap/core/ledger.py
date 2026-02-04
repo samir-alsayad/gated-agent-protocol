@@ -21,6 +21,11 @@ class Ledger(ABC):
         """Update the status of a specific step in the ledger."""
         pass
 
+    @abstractmethod
+    def get_approval(self, step: str) -> Optional[StepData]:
+        """Get the stored status of a specific step (ignoring manifest dependencies)."""
+        pass
+
 class YamlLedger(Ledger):
     def get_status(self, manifest: GapManifest) -> GapStatus:
         # 1. Load Ledger (if exists)
@@ -103,3 +108,21 @@ class YamlLedger(Ledger):
         
         with open(ledger_path, "w") as f:
             yaml.safe_dump(current_data, f)
+
+    def get_approval(self, step: str) -> Optional[StepData]:
+        ledger_path = self.root / ".gap/status.yaml"
+        if not ledger_path.exists():
+            return None
+            
+        with open(ledger_path) as f:
+            data = yaml.safe_load(f) or {}
+            
+        steps = data.get("steps", {})
+        if step in steps:
+            s = steps[step]
+            return StepData(
+                status=StepStatus(s["status"]),
+                approver=s.get("approver"),
+                timestamp=s.get("timestamp")
+            )
+        return None

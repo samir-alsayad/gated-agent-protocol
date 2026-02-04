@@ -129,3 +129,14 @@ class SqlLedger(Ledger):
                 db_step.timestamp = timestamp or datetime.utcnow()
                 
             session.commit()
+
+    def get_approval(self, step: str) -> Optional[StepData]:
+        with self.Session() as session:
+            db_step = session.query(Step).filter_by(project_id=self.project_id, name=step).first()
+            if db_step:
+                return StepData(
+                    status=StepStatus(db_step.status),
+                    approver=db_step.approver,
+                    timestamp=db_step.timestamp.isoformat() if db_step.timestamp else None
+                )
+            return None
