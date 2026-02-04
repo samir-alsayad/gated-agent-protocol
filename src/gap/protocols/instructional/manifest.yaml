@@ -11,41 +11,50 @@ flow:
     gate: true
     description: "The Student defines what they want to learn."
 
-  - step: design_course
-    name: "Course Design"
-    template: course
-    artifact: docs/course.md
+  - step: design
+    name: "Structural Design"
+    template: design
+    artifact: docs/design.md
     gate: true
     needs: [requirements]
-    description: "The Teacher proposes the High-Level Arc."
+    description: "Course architecture and unit sequences."
 
-  - step: design_section
-    name: "Section Design"
-    template: section
-    artifact: docs/section.md
+  - step: policy
+    name: "Execution Policy"
+    template: policy
+    artifact: .gap/policy.md
     gate: true
-    needs: [design_course]
-    description: "The Teacher proposes the specific Unit sequence."
+    needs: [design]
+    description: "Gating strategy and exception declarations."
 
   - step: task
-    name: "The Content (Material)"
-    template: content
-    artifact: docs/content.md
+    name: "Operational Tasks"
+    template: task
+    artifact: docs/tasks.md
     gate: true
-    needs: [design_section]
-    description: "The Teacher drafts the content."
+    needs: [policy]
+    description: "Atomic units of content creation."
 
-  - step: verification
-    name: "The Assessment (Quiz)"
-    template: assessment
-    artifact: docs/assessment.md
+  - step: execution
+    name: "Execution & Content Generation"
+    template: execution
+    artifact: docs/content.md
     gate: false
     needs: [task]
-    description: "The Student proves knowledge."
+    description: "Drafting lesson content within approved boundaries."
+
+  - step: verification
+    name: "Verification & Assessment"
+    template: verification
+    artifact: docs/assessment.md
+    gate: true
+    needs: [execution]
+    description: "Validating student knowledge and content accuracy."
 
 templates:
   intent: templates/intent.md
-  course: templates/course.md
-  section: templates/section.md
-  content: templates/content.md
-  assessment: templates/assessment.md
+  design: templates/design.md
+  policy: templates/policy.md
+  task: templates/task.md
+  execution: templates/content.md
+  verification: templates/assessment.md

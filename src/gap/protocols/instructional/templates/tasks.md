@@ -1,28 +1,21 @@
 # Operational Tasks: {{ project_name }}
 
 ## 1. Access Control (ACL)
-*Automatically derived from approved tasks. The Harness will enforce this.*
-
 ```yaml
 allow_write:
-  - {{ allowed_path_1 }}
+  - "docs/content/**"
 allow_exec:
-  - {{ allowed_command_1 }}
+  - "node tools/validate_lesson.js"
 ```
 
 ## 2. Task Checklist
-Break the Structural Design into atomic, verifiable actions.
-
 - [ ] **Task 1: {{ task_title_1 }}**
   - **Description**: {{ task_desc_1 }}
-  - **Traces to**: {{ property_id_1 }}, {{ requirement_id_1 }}
+  - **Traces to**: {{ property_id_1 }}
   
 - [ ] **Task 2: {{ task_title_2 }}**
   - **Description**: {{ task_desc_2 }}
   - **Traces to**: {{ property_id_2 }}
-
-## 3. Execution Status
-{{ progress_summary }}
 
 ---
 **Verification Rule**: No task may exist without a trace to a Property (Design) or Requirement (Intent).

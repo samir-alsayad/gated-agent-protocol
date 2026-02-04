@@ -140,5 +140,5 @@ def run_protocol(project):
 4.  **Flexibility**: *"Execution is autonomous for this session only."*
 
 ## 3. The Harness Responsibility
-Your tool acts as the **Harness**. You are the "Container" that holds the "Probabilistic Drift" in check.
+Your tool acts as the **Harness**. You are the "Container" that holds the "Contextual Drift" in check.
 The Harness is dumb, explicit, and unforgiving.

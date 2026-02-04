@@ -12,28 +12,36 @@ flow:
     description: "Define the problem, user stories, and constraints."
 
   - step: design
-    name: "Technical Design"
+    name: "Structural Design"
     template: design
     artifact: docs/design.md
     gate: true
     needs: [requirements]
-    description: "Architecture, Data Structures, and Interfaces."
+    description: "Architecture, Data Structures, and Correctness Properties."
 
-  - step: plan
-    name: "Implementation Plan"
-    template: plan
-    artifact: docs/plan.md
+  - step: policy
+    name: "Execution Policy"
+    template: policy
+    artifact: .gap/policy.md
     gate: true
     needs: [design]
-    description: "Step-by-step execution tasks."
+    description: "Gating strategy and execution boundaries."
 
-  - step: implementation
-    name: "Coding"
+  - step: task
+    name: "Operational Tasks"
     template: task
-    artifact: docs/task.md
-    gate: false
-    needs: [plan]
-    description: "Tracking the build progress."
+    artifact: docs/tasks.md
+    gate: true
+    needs: [policy]
+    description: "Atomic actions traceable to design properties."
+
+  - step: execution
+    name: "Execution & Scribing"
+    template: execution
+    artifact: docs/walkthrough.md
+    gate: true
+    needs: [task]
+    description: "Derived output locked to approved ACLs."
 
   - step: verification
     name: "Verification & Walkthrough"

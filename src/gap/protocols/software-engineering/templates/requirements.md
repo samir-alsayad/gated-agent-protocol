@@ -13,18 +13,14 @@ Define what success looks like. Each goal should be measurable and traceable.
 *   **G-02**: {{ goal_2 }}
 *   **G-03**: {{ goal_3 }}
 
-## 3. Constraints
-Define behavioral bounds using EARS syntax (WHEN...SHALL or IF...THEN...SHALL).
+## 3. Requirements (The Source)
+All requirements MUST use **EARS** (Easy Approach to Requirements Syntax).
 
-*   **C-01**: WHEN {{ trigger_condition }}, THE system SHALL {{ required_behavior }}.
-*   **C-02**: IF {{ precondition }}, THEN THE system SHALL {{ required_response }}.
-*   **C-03**: THE system SHALL NOT {{ forbidden_behavior }}.
-
-## 4. Success Criteria
-How will we know when this is complete?
-
-*   [ ] {{ criterion_1 }}
-*   [ ] {{ criterion_2 }}
+*   **R-01**: **WHEN** [Trigger Content], **THE** system **SHALL** [Response].
+*   **R-02**: **IF** [Precondition], **THEN THE** system **SHALL** [Response].
+*   **R-03**: **WHILE** [State], **THE** system **SHALL** [Response].
+*   **R-04**: **THE** system **SHALL** [Response].
 
 ---
-**Traceability:** This document establishes the foundation for all downstream artifacts.
+**The Golden Thread (Trinity)**:
+These Requirements are the **immutable truth**. Every Design Property must validate at least one of these, and every Task must implement  at least one Property.

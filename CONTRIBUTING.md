@@ -83,4 +83,4 @@ If your change weakens this guarantee, it won't be merged.
 
 ---
 
-*Built with <3 by the Sovereign AI Community.*
+*Built with <3 by the Open Agent Community.*

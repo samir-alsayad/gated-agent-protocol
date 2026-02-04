@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "gated-agent-protocol"
 version = "1.0.0"
-description = "The Sovereign Gated Agent Protocol Engine."
+description = "The Gated Agent Protocol Engine."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
