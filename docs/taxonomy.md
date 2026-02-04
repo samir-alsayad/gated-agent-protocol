@@ -7,13 +7,14 @@
 
 ## 1. Governance Terms (The Law)
 
-### Decision Record
-An explicit commitment that constrains future work. Must be **Gated** (User Approved).
-*   **Requirements**: Intent decisions (What/Why).
-*   **Design**: Structural decisions (How).
-*   **Task**: Operational decisions (Action).
+### Alignment Record (Decision Record)
+An explicit commitment that constrains future work. Must be **Approved** by the User.
+*   **Requirements**: Intent (What/Why).
+*   **Design**: Structure (How).
+*   **Policy**: Governance (Rules).
+*   **Task**: Operational (Actions).
 
-**Note**: A Decision Record is created during a **Decision Phase**.
+**Note**: Alignment Records are created during the **Alignment Phase Class**.
 
 ### Execution Output
 The material produced by performing a Task.
@@ -23,9 +24,9 @@ The material produced by performing a Task.
 
 ### Gate
 A checkpoint where work is reviewed and approved.
-*   **Decision Gate**: Mandatory. Converts a Proposal to Law.
-*   **Execution Gate**: Optional. Validates quality before merge.
-*   **Types**: True (User Approval) or False (Autonomous Transition).
+*   **Alignment Gate**: Mandatory. Approves a Proposal into authoritative Alignment.
+*   **Execution Gate**: Optional. Validates Execution Output before it is promoted.
+*   **State transition**: Transitions from `PENDING` to `APPROVED`.
 
 ### Ledger
 The immutable history of which Decision Records have been approved.
@@ -41,12 +42,12 @@ A directory managed by GAP (contains `manifest.yaml`).
 A re-usable workflow template (e.g., `instructional`, `software`).
 
 ### Phase Classes
-The Classes of phases.
-*   **Decision Phases**: Captures Decision Records.
-*   **Execution Phases**: Derived from the execution policy, the Phases between the approval Gates.
+The two fundamental categories of workflow phases.
+*   **Alignment Phase Class**: The "Sovereign Gating" phase. Captures Requirements, Design, Policy, and Tasks. Authority is created here.
+*   **Execution Phase Class**: The "Throughput" phase. Derived from the Alignment contract. Captures the generation of the actual content (Code, Prose, etc.).
 
 ### Phase
-A specific phase inside a Phase Class (e.g., `Requirements Phase`).
+A specific state inside a Phase Class (e.g., `Requirements Phase` is an Alignment Phase).
 
 ### Manifest
 The configuration file defining the Project's Protocol.

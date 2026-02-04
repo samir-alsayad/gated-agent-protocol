@@ -1,24 +1,20 @@
-# Structural Design: {{ project_name }}
+# Curriculum Design: {{ project_name }}
 
-## 1. Course Architecture
-The overarching structure of the learning experience.
+## 1. The Abstraction Stack (Syllabus)
+Define the sequence of discovery.
 
-```mermaid
-graph TD
-    A[{{ unit_1 }}] --> B[{{ unit_2 }}]
-    B --> C[{{ unit_3 }}]
-```
+### [Module 1: {{ module_1_name }}]
+- **Unit 1.1**: {{ unit_1_1_title }}
+- **Unit 1.2**: {{ unit_1_2_title }}
 
-## 2. Correctness Properties
-Define verifiable properties that the curriculum must satisfy.
+### [Module 2: {{ module_2_name }}]
+- **Unit 2.1**: {{ unit_2_1_title }}
 
-*   **P-01**: {{ property_1 }} — *Validates: R-01*
-*   **P-02**: {{ property_2 }} — *Validates: R-02*
-*   **P-03**: {{ property_3 }} — *Validates: R-03*
+## 2. Pedagogical Properties
+Define the structural decisions of the course.
 
-## 3. Unit Sequence
-1.  **{{ unit_title_1 }}**: {{ unit_desc_1 }}
-2.  **{{ unit_title_2 }}**: {{ unit_desc_2 }}
+*   **P-01**: **Abstraction Lock**: No student may access Module N+1 until Reflection N is validated. — *(Validates: R-01, R-02)*
+*   **P-02**: **Discovery First**: Labs must involve construction before documentation. — *(Validates: R-03)*
 
 ---
-**Verification Rule**: Every property MUST validate at least one Requirement ID from intent.md.
+**Verification Rule**: Every Syllabus item and Property MUST validate at least one Learning Requirement (R-ID).

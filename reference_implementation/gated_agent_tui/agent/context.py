@@ -47,3 +47,14 @@ class ContextManager:
                          # repo_map += f"  (Error parsing {file})\n"
                          pass
         return repo_map
+
+    def read_all_specs(self) -> str:
+        """Reads all Markdown files in the specs/ directory to build global context."""
+        context = ""
+        specs_dir = self.root / "specs"
+        if specs_dir.exists():
+            for f in sorted(specs_dir.glob("*.md")):
+                context += f"--- SPEC: {f.name} ---\n"
+                context += f.read_text()
+                context += "\n\n"
+        return context

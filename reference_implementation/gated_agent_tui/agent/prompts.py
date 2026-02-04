@@ -30,3 +30,18 @@ REPO MAP (Existing Codebase):
 {repo_map}
 
 BEGIN CODE:"""
+
+    @staticmethod
+    def execution_task(task, context):
+        return f"""You are the EXECUTION AGENT for the Gated Agent Protocol (GAP).
+Your current task is: {task.id} (Target File: {task.file})
+
+RULES:
+1. OUTPUT THE COMPLETE CONTENT for `{task.file}`.
+2. NO MARKDOWN BLOCKS for code. Just raw text/code.
+3. Align strictly with the provided ALIGNMENT CONTEXT.
+
+ALIGNMENT CONTEXT:
+{context}
+
+BEGIN EXECUTION:"""

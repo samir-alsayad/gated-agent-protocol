@@ -90,3 +90,36 @@ def check_manifest(
     except Exception as e:
         typer.secho(f"Error: {e}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
+@app.command("traceability")
+def check_traceability(
+    path: Path = typer.Argument(..., help="Path to manifest.yaml")
+):
+    """
+    Validate referential integrity (The Trinity).
+    Ensures: Tasks -> Design Properties -> Requirements.
+    """
+    from gap.core.auditor import TraceabilityAuditor
+    
+    try:
+        root = path.parent
+        auditor = TraceabilityAuditor(root)
+        errors = auditor.audit()
+        
+        if errors:
+            has_errors = any(e.severity == "error" for e in errors)
+            title = "❌ Traceability Audit failed:" if has_errors else "⚠️ Traceability Audit found warnings:"
+            color = typer.colors.RED if has_errors else typer.colors.YELLOW
+            
+            typer.secho(title, fg=color)
+            for err in errors:
+                err_color = typer.colors.RED if err.severity == "error" else typer.colors.YELLOW
+                typer.secho(f"  • {err}", fg=err_color)
+            
+            if has_errors:
+                raise typer.Exit(code=1)
+        else:
+            typer.secho("✅ Traceability is healthy. All items are linked to their pedigree.", fg=typer.colors.GREEN)
+            
+    except Exception as e:
+        typer.secho(f"Error: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)

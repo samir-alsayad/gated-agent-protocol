@@ -7,6 +7,30 @@
 
 GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a "Workflow Compliance Layer".
 
+## 🌍 The 4 Domains of Sovereignty
+
+GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
+
+| Domain | Protocol | Goal |
+| :--- | :--- | :--- |
+| **🏗️ School** | `instructional` | Scribing first-principles curricula. |
+| **💻 Software** | `software-dev` | High-integrity, ACL-gated coding. |
+| **🔬 Science** | `benchmarking` | Verifiable experimental methodology. |
+| **📖 Authoring** | `creative-writing` | Traceable narrative architecture. |
+
+---
+
+## 🛡️ Core Engine Features
+
+### 1. The Traceability Auditor
+Run `gap check traceability` to verify the **Trinity of Intent**. The engine automatically detects "Orphaned Intent"—any task or design decision that cannot prove its pedigree back to a validated requirement.
+
+### 2. Path-Locked Security (ACL)
+Agents are confined to whitelisted directories defined in the approved `tasks.md`. No "leaking" into system files or unauthorized project areas.
+
+### 3. Verification State Machine
+A rigid graph of checkpoints (LOCKED -> PENDING -> APPROVED). Authority is never assumed; it is granted via explicit user gates.
+
 ---
 
 ## 📋 Requirements
@@ -89,32 +113,71 @@ gap gate approve requirements --manifest manifest.yaml
 
 ## 🏗️ Core Concepts
 
-### Boolean Gates
+### The Two Phase Classes
 
-Every phase has a **Gate** (`gate: true` or `gate: false`):
-- `true` = Requires supervisor approval before proceeding
-- `false` = Autonomous execution allowed
+GAP enforces a strict distinction between **Alignment** and **Execution**:
+
+1.  **Alignment Phase Class** (Sovereign Gating)
+    *   **Artifacts**: Requirements, Design, Policy, Tasks.
+    *   **Gating**: Mandatory User Approval. Authority is created here.
+2.  **Execution Phase Class** (Throughput)
+    *   **Artifacts**: Code, Prose, Data, Reports.
+    *   **Gating**: Optional (Checkpoints). Derived from approved Alignment.
 
 ### Workflow Compliance
 
 GAP enforces a strict **Chain of Custody**:
 
 ```
-Requirements → Design → Policy → Tasks → Execution
-     ↓            ↓         ↓        ↓         ↓
-   (gate)      (gate)    (gate)   (gate)    (ACL)
+[ ALIGNMENT PHASE CLASS ]           [ EXECUTION PHASE CLASS ]
+Requirements → Design → Policy → Tasks  ==>  Execution
+     ↓            ↓         ↓        ↓             ↓
+   (gate)      (gate)    (gate)   (gate)        (harness)
 ```
 
-If an Agent tries to skip a compliance phase, GAP blocks it.
+### Execution Checkpoints
 
-### Checkpoints
-
-During execution, the Harness can pause at designated points:
+During the **Execution Phase Class**, the Harness can pause at designated points based on the approved Policy:
 - `explicit` = Pause only at listed task IDs
-- `every` = Pause after every task
+- `every` = Pause after every single task
 - `batch` = Run all, review at the end
 
----
+### Prompt Classification (Separation of Concerns)
+
+GAP enforces a critical distinction between what the **Protocol** controls and what the **Agent** generates:
+
+| Prompt Type | Owner | Mechanism | Examples |
+|-------------|-------|-----------|----------|
+| **Programmatic** | Protocol | **Deterministic Form** | Domain selection, policy forms, gate approvals |
+| **Generative** | Agent | **Probabilistic Stream** | Requirements, design, tasks, code |
+
+**The Philosophy of Determinism:**
+We believe that **Authority must be Deterministic**. 
+- An agent should not "hallucinate" its own security policy.
+- A gate should not be "suggested" by an LLM.
+- Critical boundaries (ACLs, Tool Permissions) are defined via rigid, unchangeable forms that the agent cannot influence.
+
+This ensures that while the **work** is creative (AI), the **boundaries** are absolute (Code).
+
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     GAP (Protocol Layer)                    │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐ │
+│  │   PROGRAMMATIC      │    │        GENERATIVE           │ │
+│  │   (GAP Controls)    │    │      (Agent Proposes)       │ │
+│  │                     │    │                             │ │
+│  │  • Domain Selection │    │  • Requirements Content     │ │
+│  │  • Policy Forms     │    │  • Design Documents         │ │  
+│  │  • Gate Approvals   │    │  • Task Definitions         │ │
+│  │  • Checkpoints      │    │  • Code Implementation      │ │
+│  └─────────────────────┘    └─────────────────────────────┘ │
+│              ↓                          ↓                   │
+│         [Deterministic]            [Requires Gate]          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+
 
 ## 📚 Documentation
 

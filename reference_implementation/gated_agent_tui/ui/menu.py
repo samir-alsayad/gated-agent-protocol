@@ -1,40 +1,54 @@
 import sys
 import os
 from pathlib import Path
-from ..core.flow import FlowStep, Task
+from ..core.flow import FlowStep, Task, parse_tasks
 from ..core.state import load_manifest, get_ledger, CheckpointStrategy, StepStatus
 from ..agent.llm import GatedLLM
 from ..agent.context import ContextManager
 from ..agent.prompts import Prompts
 from ..core.bridge import FileSystemBridge
+from ..core.harness import HarnessFactory
 from .interaction import InteractionManager
 
 
 class Dashboard:
-    def __init__(self, root: Path, api_key: str):
+    def __init__(self, root: Path, api_key: str, driver: str = "reference", model: str = None):
         self.root = root
+        self.api_key = api_key
+        self.driver = driver  # 'reference' or 'gptme'
+        self.model = model
         self.llm = GatedLLM(root, api_key)
         self.context_mgr = ContextManager(root)
         self.io = FileSystemBridge(root)
         self.interaction = InteractionManager(root)
         
         # Load Core State
-        self.manifest = load_manifest(root / "manifest.yaml")
-        if not (root / ".gap").exists():
-            (root / ".gap").mkdir(exist_ok=True)
-        self.ledger = get_ledger(root, self.manifest)
+        self.manifest_path = root / "manifest.yaml"
+        self.manifest = None
+        self.ledger = None
+        
+        if self.manifest_path.exists():
+            self.manifest = load_manifest(self.manifest_path)
+            if not (root / ".gap").exists():
+                (root / ".gap").mkdir(exist_ok=True)
+            self.ledger = get_ledger(root, self.manifest)
+        
+        # Load ACL (Lazy)
+        from ..security.acl import parse_acl
+        self.io.acl_whitelist = parse_acl(root)
         
         # Load ACL (Lazy)
         from ..security.acl import parse_acl
         self.io.acl_whitelist = parse_acl(root)
 
     def main_loop(self):
+        driver_label = "🔥 GPTme (Live)" if self.driver == "gptme" else "📋 Reference (Classic)"
         print(f"-> Attaching Gated Agent to Project Root: {self.root}")
+        print(f"-> Driver: {driver_label}")
         print("=== GATED AGENT V2 (Modular Architecture) ===")
         
-        # Initial Spark
+        # Initial Spark (Programmatic Prompt)
         user_intent = ""
-        # Heuristic check for existing project
         if not (self.root / "specs").exists():
             print("\n>>> THE SPARK")
             print("What should we build/write/research today?")
@@ -42,7 +56,7 @@ class Dashboard:
 
         while True:
             print("\n" + "="*40)
-            print("   DASHBOARD")
+            print(f"   DASHBOARD  [{driver_label}]")
             print("="*40)
             print(" [1] PHASE 1: PLANNING (Domain Agnostic)")
             print(" [2] PHASE 2: EXECUTION (tasks -> code)")
@@ -62,6 +76,7 @@ class Dashboard:
                 break
             else:
                 print("Invalid choice.")
+
 
     def run_phase_planning(self, user_intent):
         print("\n>>> PHASE 1: DECISION FLOW")
@@ -140,7 +155,38 @@ class Dashboard:
         final_prompt = Prompts.fill_template(prompt_template, context)
         original_prompt = final_prompt # SAVE BASELINE
         
-        # LLM Call
+        if self.driver == "gptme":
+            # 1. SPECIAL CASE: Programmatic Forms
+            if step.name == "policy":
+                from .forms import ProgrammaticForms
+                forms = ProgrammaticForms(self.root)
+                content = forms.run_policy_wizard(step)
+                self.io.write_artifact(step.artifact, content, allowed_path=step.artifact)
+                print(f"✅ Policy generated deterministically.")
+                return 
+
+            # 2. STANDARD CASE: GPTme Live Window
+            print(f"🔥 [GPTME] Provisioning Sovereign Window for {step.artifact}...")
+            print(f"🛡️  SINGULAR PROMISE LOCK: Only {step.artifact} is authorized.")
+            
+            # Create a localized task for the harness with explicit phase_class
+            task = Task(step.name, step.artifact, phase_class='alignment')
+            harness = HarnessFactory.create("gptme", self.root, self.api_key, model=self.model)
+            
+            # Execute with singular whitelist
+            success = harness.execute([task], whitelist=[step.artifact])
+
+            if success:
+                print(f"✅ Live Alignment step {step.name} complete.")
+                # We don't need the feedback loop here as gptme already wrote the file
+                # The user saw it live.
+                return
+            else:
+                print(f"🛑 Live Alignment failed. Falling back to Classic for retry.")
+
+
+
+        # Classic LLM Call
         print("    (Agent is Thinking...)")
         content = self.llm.chat(final_prompt)
         
@@ -185,14 +231,41 @@ class Dashboard:
 
     def run_phase_execution(self):
         print("\n>>> PHASE 2: EXECUTION")
-        # 1. Parse Tasks logic (Needs to be ported)
-        # For brevity in this V2 scaffold, I'll implement a placeholder
-        # In real V2, this calls parsing logic in `core/flow.py`
-        print("(Execution Logic would run here - similar to V1)")
         
+        # 1. Parse Tasks from the Alignment Artifact
+        tasks_path = self.root / "specs/tasks.md"
+        tasks = parse_tasks(tasks_path)
+        
+        if not tasks:
+            print("🛑 No tasks found in specs/tasks.md. Have you completed Alignment?")
+            return
+
+        print(f"✅ Found {len(tasks)} approved tasks.")
+        
+        # 2. Select Harness based on driver
+        h_type = "gptme" if self.driver == "gptme" else "legacy"
+        driver_label = "🔥 GPTme" if self.driver == "gptme" else "📋 Reference"
+        print(f"🚀 Using Driver: {driver_label}")
+        
+        harness = HarnessFactory.create(h_type, self.root, self.api_key, model=self.model)
+        
+        # 3. Load Checkpoints from Manifest
+        checkpoints = []
+        if self.manifest.checkpoints:
+            checkpoints = self.manifest.checkpoints.after_tasks
+        
+        # 4. Execute
+        success = harness.execute(tasks, checkpoints=checkpoints)
+        
+        if success:
+             print("\n✨ Alignment reached. Execution phase complete.")
+        else:
+             print("\n⚠️ Execution failed or was halted.")
+
         # Reload ACL
         from ..security.acl import parse_acl
         self.io.acl_whitelist = parse_acl(self.root)
+
         
     def run_phase_verification(self):
         print("\n>>> PHASE 3: VERIFICATION")

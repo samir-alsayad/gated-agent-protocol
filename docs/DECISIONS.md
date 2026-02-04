@@ -1,34 +1,25 @@
-# Gated Decisions and Gated Execution
-
-## 1. Overview
-
-GAP separates **decision authority** from **execution throughput** in order to preserve user intent while enabling high-volume, agent-assisted work. This separation applies uniformly across domains such as software development, curriculum creation, and authoring.
+GAP separates the **Alignment Phase Class** (Decision Authority) from the **Execution Phase Class** (Throughput) in order to preserve user intent while enabling high-volume, agent-assisted work. This separation applies uniformly across domains.
 
 At the core of GAP is a strict rule:
 
-> **Authority is granted only through explicit user approval of decision records. Execution output never acquires authority implicitly.**
+> **Authority is granted only through explicit user approval of Alignment artifacts. Execution output never acquires authority implicitly.**
 
 This chapter formalizes how decisions are gated, how execution proceeds, and how the two interact.
 
 ---
 
-## 2. Decision Records
+## 2. The Alignment Phase Class (Decision Records)
 
-In GAP, all intentional work is governed by **decision records**. Decision records encode commitments that constrain all downstream derivations.
+In GAP, all intentional work is governed by the **Alignment Phase**. This phase consists of **Decision Records** that encode commitments which constrain all downstream derivations.
 
-GAP defines three classes of decision records:
+GAP defines four types of decision records within the Alignment Phase:
 
-* **Requirements** — intent decisions
-  Define what must be true, what problem is being solved, and what constraints apply.
-* **Design** — structural decisions
-  Define how the requirements are satisfied through structure, organization, or strategy.
-* **Policy** — governance decisions
-  Define the constraints, gating granularity, and execution mode (Autonomous vs Gated).
-* **Tasks** — operational decisions
-  Define what specific actions will be taken to realize the design.
+* **Requirements** — Intent decisions (What)
+* **Design** — Structural decisions (How)
+* **Policy** — Governance decisions (Rules)
+* **Tasks** — Operational decisions (Steps)
 
-Although they differ in scope and resolution, all three are ontologically identical:
-they are **explicit decisions that bind future work**.
+All Alignment records are ontologically identical: they are **explicit decisions that bind future work**.
 
 ---
 
@@ -56,12 +47,9 @@ The purpose of mandatory decision gating is to prevent:
 
 ---
 
-## 4. Tasks Are Decisions, Not Execution
+## 4. Tasks Are Alignment, Not Execution
 
-Tasks are frequently mistaken for execution. In GAP, this is explicitly incorrect.
-
-A **Task** is a decision to perform a specific action.
-**Execution** is the act of carrying out that decision.
+Tasks are frequently mistaken for execution. In GAP, this is explicitly incorrect. A **Task** is an Alignment Decision to perform a specific action. The **Execution Phase** is the act of carrying out that decision.
 
 For example:
 * “Write Chapter 3 exploring X from POV Y” is a task decision.
@@ -73,9 +61,9 @@ Tasks therefore belong fully within the decision-record hierarchy and are subjec
 
 ---
 
-## 5. Execution Output
+## 5. The Execution Phase Class
 
-Execution output consists of all derived material produced by carrying out approved task decisions. Examples include:
+The Execution Phase Class consists of all derived material produced by carrying out approved Alignment Decisions (Tasks).
 * prose, pages, scenes
 * code, functions, modules
 * lessons, exercises, assessments

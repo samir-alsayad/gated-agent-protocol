@@ -15,40 +15,20 @@ GAP is a **Workflow Enforcement Protocol** that governs agent behavior through m
 
 ---
 
-## 2. The Solution: A State Machine of Work
+GAP enforces a strict **Chain of Custody** for every action an Agent takes. It divides work into two fundamental **Phase Classes**.
 
-GAP enforces a strict **Chain of Custody** for every action an Agent takes. It divides work into five distinct phases, each with its own artifact and verification gate.
+### 1. The Alignment Phase Class (Sovereign Gating)
+The Alignment Class consists of the **Decision Records** that define the contract between User and Agent. These are subject to **Mandatory Gating**.
 
-### The Phases of Execution
+1.  **Requirements (The Source)**: What must be true.
+2.  **Design (The Blueprint)**: How the structure satisfies the source.
+3.  **Policy (The Governance)**: The rules of the session (ACLs, Gating mode).
+4.  **Tasks (The Plan)**: Atomic actions linked to the design.
 
-1.  **Requirements (The Source)**
-    *   **Goal**: Define *what* is needed without ambiguity.
-    *   **Artifact**: `requirements.md`
-    *   **Format Standard**: **EARS** (Recommended) or clear acceptance criteria.
-    *   *Example*: "WHEN the user clicks Save, THE System SHALL validate the schema."
+### 2. The Execution Phase Class (Throughput)
+The Execution Class is where the work is performed. It is derived from the Alignment Class and is subject to **Optional Gating**.
 
-2.  **Design (The Blueprint)**
-    *   **Goal**: Define *how* to solve it.
-    *   **Artifact**: `design.md`
-    *   **Validation**: **Design-to-Requirement Mapping**.
-    *   *Example*: "**Validates: Requirement 1.2** - The schema validator uses strict typing."
-
-3.  **Execution Policy (The Governance)**
-    *   **Goal**: Define the permissions and boundaries of the session.
-    *   **Artifact**: `policy.md` (Configuration Declaration).
-    *   **Concept**: **Law vs Exception**.
-    *   *Example*: "Exception: Grant write access to `src/` for this session."
-
-4.  **Tasks (The Plan)**
-    *   **Goal**: Break the design into atomic units of work.
-    *   **Artifact**: `tasks.md`
-    *   **Standard**: **Traceable Checklists**.
-    *   *Example*: "Task 1: Implement Validator (Traces to Property 2)."
-
-5.  **Execution (The Action)**
-    *   **Goal**: Perform the work.
-    *   **Artifact**: `walkthrough.md`.
-    *   **Constraint**: **The Harness**. The Agent is restricted to the approved Task ACLs.
+5.  **Execution (The Action)**: The generation of code, prose, or data.
 
 ---
 
@@ -67,7 +47,21 @@ Code must have a distinct pedagogical pedigree.
 
 ---
 
-## 4. Governance: Law and Exception
+### 4. Deterministic vs. Probabilistic Boundaries
+
+A core tenet of GAP v2.0 is the **Separation of Concerns** between the Protocol and the Agent.
+
+*   **The Protocol** is **Deterministic**. It handles authority, security, and gating. It asks closed questions ("What is the ACL rule?").
+*   **The Agent** is **Probabilistic**. It handles creativity, content, and implementation. It answers open questions ("How do I build this app?").
+
+**The Anti-Patterns GAP Avoids:**
+1.  **Hallucinated Policy**: Asking an LLM to generate its own security policy is a vulnerability. The agent might "forget" to restrict itself. In GAP, policies are defined via rigid forms that never pass through the LLM.
+2.  **Soft Gates**: A gate that relies on an LLM to classify "Is this dangerous?" is unreliable. GAP gates are binary, user-driven, and ledger-backed.
+
+This separation ensures that while the **work** is creative (AI), the **boundaries** are absolute (Code).
+
+## 5. Governance: Law and Exception
+
 
 GAP solves the rigidity problem of traditional sandboxes with the **Law and Exception** model, inspired by reliable systems engineering practices.
 

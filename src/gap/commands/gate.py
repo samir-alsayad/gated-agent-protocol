@@ -8,7 +8,7 @@ from datetime import datetime
 from gap.core.manifest import load_manifest
 from gap.core.state import StepStatus
 from gap.core.factory import get_ledger
-from gated_agent.security import ACLEnforcer
+from gap.core.security import ACLEnforcer
 
 app = typer.Typer(help="Manage approvals and state transitions.")
 

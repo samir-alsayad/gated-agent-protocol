@@ -1,19 +1,21 @@
-# Intent (Requirements): {{ project_name }}
+# Learning Intent (Requirements): {{ project_name }}
 
-## 1. Context
-{{ student_context }}
+## 1. The Why (Sovereign Intension)
+{{ learning_intent_description }}
 
-**Current Knowledge**: {{ current_knowledge }}
-**Learning Goal**: {{ learning_goal }}
+**Core Goal**: {{ primary_goal }}
 
-## 2. Requirements (The Source)
-All instructional requirements MUST use **EARS** (Easy Approach to Requirements Syntax).
+## 2. Knowledge Requirements (The Source)
+Define the measurable learning outcomes using **EARS** (Easy Approach to Requirements Syntax).
 
-*   **R-01**: **WHEN** the student starts the unit, **THE** system **SHALL** {{ required_behavior }}.
-*   **R-02**: **IF** the student fails the assessment, **THEN THE** system **SHALL** {{ remedial_action }}.
-*   **R-03**: **WHILE** in the practice session, **THE** system **SHALL** {{ feedback_mechanism }}.
-*   **R-04**: **THE** system **SHALL** {{ general_requirement }}.
+### [Conceptual Understanding]
+*   **R-01**: **THE** student **SHALL** be able to explain {{ concept_1 }} from first principles.
+*   **R-02**: **THE** student **SHALL** reconstruct the logic of {{ concept_2 }} without using external abstractions.
+
+### [Operational Proof]
+*   **R-03**: **WHEN** challenged with {{ lab_scenario }}, **THE** student **SHALL** demonstrate mastery by building {{ artifact_name }}.
+*   **R-04**: **THE** student **SHALL** submit a reflection proving the "Why" behind their implementation.
 
 ---
 **The Compliance Chain**:
-These Requirements are the **primary source**. Every Design Property must validate one of these, and every Task must implement a Property.
+These Knowledge Requirements are the **primary source**. Every Lesson (Design) and every Exercise (Task) must trace back to these goals.
