@@ -39,6 +39,48 @@ Requirements → Design → Tasks  ==>  Implementation / Execution
 
 ---
 
+
+## 🏗️ Core Philosophy
+
+### Interaction Classification (Separation of Concerns)
+
+GAP enforces a critical distinction between what the **Protocol** controls and what the **Agent** generates:
+
+| Interaction Type | Owner | Mechanism | Examples |
+|------------------|-------|-----------|----------|
+| **Programmatic** | Protocol | **Deterministic Form** | Domain selection, policy forms, gate approvals |
+| **Generative**   | Agent    | **Probabilistic Stream** | Requirements, design, tasks, code |
+
+**The Philosophy of Determinism:**
+We believe that **Authority must be Deterministic**. 
+- An agent should not "hallucinate" its own security policy.
+- A gate should not be "suggested" by an LLM.
+- Critical boundaries (ACLs, Tool Permissions) are defined via rigid, unchangeable forms that the agent cannot influence.
+
+This ensures that while the **work** is creative (AI), the **boundaries** are absolute (Code).
+
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     GAP (Protocol Layer)                    │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐ │
+│  │   PROGRAMMATIC      │    │        GENERATIVE           │ │
+│  │   (GAP Controls)    │    │      (Agent Proposes)       │ │
+│  │                     │    │                             │ │
+│  │  • Domain Selection │    │  • Requirements Content     │ │
+│  │  • Policy Forms     │    │  • Design Documents         │ │  
+│  │  • Gate Approvals   │    │  • Task Definitions         │ │
+│  │  • Checkpoints      │    │  • Code Implementation      │ │
+│  └─────────────────────┘    └─────────────────────────────┘ │
+│              ↓                          ↓                   │
+│         [Deterministic]            [Can be Gated]           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+
+
+
+
 ## 🌍 4 Example Domains
 
 GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
@@ -143,46 +185,6 @@ gap gate approve requirements --manifest manifest.yaml
 ```
 
 ---
-
-## 🏗️ Core Philosophy
-
-### Prompt Classification (Separation of Concerns)
-
-GAP enforces a critical distinction between what the **Protocol** controls and what the **Agent** generates:
-
-| Prompt Type | Owner | Mechanism | Examples |
-|-------------|-------|-----------|----------|
-| **Programmatic** | Protocol | **Deterministic Form** | Domain selection, policy forms, gate approvals |
-| **Generative** | Agent | **Probabilistic Stream** | Requirements, design, tasks, code |
-
-**The Philosophy of Determinism:**
-We believe that **Authority must be Deterministic**. 
-- An agent should not "hallucinate" its own security policy.
-- A gate should not be "suggested" by an LLM.
-- Critical boundaries (ACLs, Tool Permissions) are defined via rigid, unchangeable forms that the agent cannot influence.
-
-This ensures that while the **work** is creative (AI), the **boundaries** are absolute (Code).
-
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     GAP (Protocol Layer)                    │
-│  ┌─────────────────────┐    ┌─────────────────────────────┐ │
-│  │   PROGRAMMATIC      │    │        GENERATIVE           │ │
-│  │   (GAP Controls)    │    │      (Agent Proposes)       │ │
-│  │                     │    │                             │ │
-│  │  • Domain Selection │    │  • Requirements Content     │ │
-│  │  • Policy Forms     │    │  • Design Documents         │ │  
-│  │  • Gate Approvals   │    │  • Task Definitions         │ │
-│  │  • Checkpoints      │    │  • Code Implementation      │ │
-│  └─────────────────────┘    └─────────────────────────────┘ │
-│              ↓                          ↓                   │
-│         [Deterministic]            [Requires Gate]          │
-└─────────────────────────────────────────────────────────────┘
-```
-
-
-
 
 ## 📚 Documentation
 
