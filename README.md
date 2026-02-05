@@ -7,6 +7,38 @@
 
 GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a "Workflow Compliance Layer".
 
+---
+
+## 🔄 The Sovereign Architecture
+
+GAP splits the lifecycle of an agent's work into two distinct, **gated** classes. This ensures that the supervisor remains the final authority at every critical junction.
+
+### 1. The Alignment Phase (Blueprint Logic)
+Before a single line of code is written, the supervisor must approve a configurable set of artifacts the agent shall propose.
+*   **Artifacts**: 
+We use `requirements.md`, `design.md`, `tasks.md` for most types of work and domain, but these can be extended or omitted at will.
+*   **The Gate**: **Mandatory Supervisor Approval**. The protocol prevents the agent from entering the Execution phase until the Supervisor has audited and signed off on the blueprint.
+*   **Result**: A deterministic Contract that the agent is bound to follow during Execution.
+
+### 2. The Execution/Implementation Phase (Throughput Logic)
+Once the alignment is locked, the agent moves to implementation/execution:
+*   **Artifacts**: Source code, reports, data, writing.
+*   **Execution/Implementation**: Running tests, making tool calls, running benchmarks, etc.
+*   **The Gate**: **Deterministic Checkpoints**. Based on the approved policy (`explicit`, `every`, or `batch`), the harness automatically pauses the agent for review.
+*   **Result**: High-speed execution without loss of control.
+
+### ⛓️ Workflow Compliance
+GAP enforces a strict **Chain of Custody** from intent to implementation:
+
+```
+[ ALIGNMENT PHASE ]                 [ EXECUTION PHASE ]
+Requirements → Design → Tasks  ==>  Implementation / Execution
+      ↓          ↓       ↓                  ↓
+   (gate)     (gate)   (gate)           (checkpoints)
+```
+
+---
+
 ## 🌍 4 Example Domains
 
 GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
@@ -17,6 +49,7 @@ GAP is domain-agnostic. It enforces the same integrity whether you are building 
 | **💻 Software** | `software-dev` | High-integrity, ACL-gated coding. |
 | **🔬 Science** | `benchmarking` | Verifiable experimental methodology. |
 | **📖 Authoring** | `creative-writing` | Traceable narrative architecture. |
+
 
 ---
 
@@ -111,36 +144,7 @@ gap gate approve requirements --manifest manifest.yaml
 
 ---
 
-## 🏗️ Core Concepts
-
-### The Two Phase Classes
-
-GAP enforces a strict distinction between **Alignment** and **Execution**:
-
-1.  **Alignment Phase Class** (Sovereign Gating)
-    *   **Artifacts**: Requirements, Design, Policy, Tasks.
-    *   **Gating**: Mandatory User Approval. Authority is created here.
-2.  **Execution Phase Class** (Throughput)
-    *   **Artifacts**: Code, Prose, Data, Reports.
-    *   **Gating**: Optional (Checkpoints). Derived from approved Alignment.
-
-### Workflow Compliance
-
-GAP enforces a strict **Chain of Custody**:
-
-```
-[ ALIGNMENT PHASE CLASS ]           [ EXECUTION PHASE CLASS ]
-Requirements → Design → Policy → Tasks  ==>  Execution
-     ↓            ↓         ↓        ↓             ↓
-   (gate)      (gate)    (gate)   (gate)        (harness)
-```
-
-### Execution Checkpoints
-
-During the **Execution Phase Class**, the Harness can pause at designated points based on the approved Policy:
-- `explicit` = Pause only at listed task IDs
-- `every` = Pause after every single task
-- `batch` = Run all, review at the end
+## 🏗️ Core Philosophy
 
 ### Prompt Classification (Separation of Concerns)
 
@@ -176,6 +180,7 @@ This ensures that while the **work** is creative (AI), the **boundaries** are ab
 │         [Deterministic]            [Requires Gate]          │
 └─────────────────────────────────────────────────────────────┘
 ```
+
 
 
 
