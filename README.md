@@ -183,6 +183,23 @@ gap gate approve requirements --manifest manifest.yaml
 🔒 implementation: LOCKED (waiting for: design)
 ```
 
+## 🏗️ 7. Reference Implementation
+
+GAP provides a reference implementation to demonstrate the protocol in action.
+
+### The Gated TUI (`gated_agent_tui`)
+A stable, text-based interface for managing the Alignment phase. It allows you to:
+- Scribe requirements and design.
+- Audit the Trinity of Intent.
+- Manage state transitions (LOCKED -> APPROVED).
+
+### The GPTme Driver (`gap-gptme`)
+> [!WARNING]
+> **Experimental / Early Alpha**
+> The native `gptme` driver is currently under development. While it demonstrates the power of autonomous execution with deterministic gates, it may encounter edge cases in tool handling and state persistence.
+
+The GPTme driver is designed for **High-Throughput Execution**. Once Alignment is locked in the TUI, the GPTme driver takes over to implement the code, bound by the approved policies.
+
 ---
 
 ## 📚 Documentation
