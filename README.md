@@ -39,10 +39,7 @@ Requirements → Design → Tasks  ==>  Implementation / Execution
 
 ---
 
-
-## 🏗️ Core Philosophy
-
-### Interaction Classification (Separation of Concerns)
+### 3. Interaction Classification (Separation of Concerns)
 
 GAP enforces a critical distinction between what the **Protocol** controls and what the **Agent** generates:
 
@@ -81,21 +78,20 @@ This ensures that while the **work** is creative (AI), the **boundaries** are ab
 
 
 
-## 🌍 4 Example Domains
+## 🌍 4. Example Domains
 
 GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
 
 | Domain | Protocol | Goal |
 | :--- | :--- | :--- |
-| **🏗️ School** | `instructional` | Scribing first-principles curricula. |
+| **🏗️ School** | `instructional` | Scribes first-principles curricula. |
 | **💻 Software** | `software-dev` | High-integrity, ACL-gated coding. |
 | **🔬 Science** | `benchmarking` | Verifiable experimental methodology. |
 | **📖 Authoring** | `creative-writing` | Traceable narrative architecture. |
 
-
 ---
 
-## 🛡️ Core Engine Features
+## 🛡️ 5. Core Engine Features
 
 ### 1. The Traceability Auditor
 Run `gap check traceability` to verify the **Trinity of Intent**. The engine automatically detects "Orphaned Intent"—any task or design decision that cannot prove its pedigree back to a validated requirement.
@@ -105,6 +101,9 @@ Agents are confined to whitelisted directories defined in the approved `tasks.md
 
 ### 3. Verification State Machine
 A rigid graph of checkpoints (LOCKED -> PENDING -> APPROVED). Authority is never assumed; it is granted via explicit user gates.
+
+### 4. Configurable Execution Gates
+Each Session and Project defines its own specific execution gates, where the supervisor must approve the agent's work to allow it to proceed. With GAP, you set the checkpoints *before* you send the agent off.
 
 ---
 
