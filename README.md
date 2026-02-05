@@ -9,7 +9,7 @@ GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Tr
 
 ---
 
-## 🔄 The Sovereign Architecture
+## Alignment Phase and Execution Phase 
 
 GAP splits the lifecycle of an agent's work into two distinct, **gated** classes. This ensures that the supervisor remains the final authority at every critical junction.
 
