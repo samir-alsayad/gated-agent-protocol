@@ -55,3 +55,4 @@ test-results/
 .pytest_cache/
 coverage.xml
 .coverage
+RESEARCH/
