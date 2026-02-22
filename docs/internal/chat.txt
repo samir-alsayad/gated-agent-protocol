@@ -1,0 +1,590 @@
+Understood, Sir. Let us pause the implementation impulse and re-establish the conceptual boundaries, because the conversation you pasted is already drifting toward “building features” instead of validating the governing model.
+1. Re-stating the Non-Negotiable Principle of GAP
+GAP is not adding capabilities.
+GAP is removing autonomy from anything that is not the supervisor.
+
+So every element in your list must pass this test:
+
+Does this increase supervisor control, or does it introduce system behavior?
+If it introduces behavior → it does not belong inside GAP.
+2. The Six Elements You Listed — Interpreted Correctly
+Let’s translate them into what they actually are in GAP terms.
+Layer	What It Looks Like	What It Really Is
+Requirements	Document	Intent declaration
+Design	Document	Constraint shaping
+Tasks	Document	Proposed mutations
+ACL	Metadata	Execution boundary declaration
+Model Assignment	Metadata	Cognitive resource request
+Checkpointing	Policy	Human interruption rights
+Notice something important:
+Only Tasks mutate reality.
+Everything else is describing permission to reach that mutation.
+
+That means ACL and Model Assignment are structurally identical.
+
+They are both:
+
+Task-scoped capability requests.
+Not subsystems. Not engines. Not logic.
+Just declarations awaiting approval.
+
+3. Why ACL Must Remain “Dumb”
+You already sensed the danger:
+“…not some magical security thingy.”
+Correct instinct.
+The moment ACL becomes:
+
+dynamic,
+enforced automatically,
+interpreted as “security,”
+you have created a policy engine, which shifts authority away from the supervisor into code.
+GAP must never protect the user.
+
+It must only reflect their decisions.
+
+So ACL is not enforcement.
+ACL is a declared envelope that external tooling may honor.
+
+Example:
+
+task: TASK-7
+proposes:
+  filesystem: write:src/**
+  shell: pytest
+GAP does not sandbox this.
+It records:
+
+“Supervisor allowed this scope.”
+If the executor violates it, GAP marks drift (INVALID), exactly like today.
+That is sufficient.
+
+4. Model Assignment Is Not a “Model Control Layer”
+The other participant already started renaming it “MCL”.
+That framing is wrong for GAP.
+
+Because “control layer” implies:
+
+routing logic
+heuristics
+optimization
+automation
+You do not want model orchestration.
+You want:
+
+A signed statement of which cognition is allowed for this task.
+So it should look indistinguishable from ACL:
+task: TASK-7
+cognition:
+  allowed: local/qwen3
+  escalation: cloud/claude (requires approval)
+No selection.
+No routing.
+No intelligence.
+Just a record of permission.
+
+5. Checkpoints Are the Only Active Mechanism
+Everything else is static.
+Checkpointing is the only place GAP actually does something at runtime:
+
+It blocks progress until the supervisor intervenes.
+
+That aligns with GAP’s purpose:
+introducing intentional friction.
+
+So checkpoints belong to the engine.
+
+ACL / Model Assignment do not.
+They belong to artifacts.
+
+6. Your Existing Codebase Already Matches This Philosophy (Mostly)
+From the modules described:
+ledger.py → authority source (good)
+gate.py → explicit approval transition (correct)
+auditor.py → traceability enforcement (fits)
+security.py → ⚠ risk of semantic overreach depending on naming
+checkpoint.py → the real enforcement point
+The danger is if security.py evolves into a sandbox manager.
+It must remain a parser, not an enforcer.
+
+Rename mentally:
+
+security.py → scope_manifest.py
+Language matters because it shapes future misuse.
+7. The Clean Mental Compression
+GAP has only three true responsibilities:
+Record what was proposed.
+Require a human to allow it.
+Detect if reality diverged.
+Everything else is documentation structure.
+If any new feature cannot be explained as one of those three,
+it is architectural creep.
+
+8. Where You Should Be Careful Next
+Do not implement:
+routing advisors
+automatic model suggestions
+budget logic
+“smart defaults”
+adaptive ACLs
+Those are conveniences.
+Convenience is how control leaks away.
+You can build those as external tools,
+but GAP itself must remain brutally unintelligent.
+
+9. The Right Question Now (Conceptually)
+Before touching code, validate this:
+Are ACL and Model Assignment just additional fields inside a Task proposal, rather than new protocol phases?
+If the answer is yes, the protocol remains minimal.
+If no, GAP is turning into an orchestrator.
+If you want, Sir, we can next map one concrete tasks.md example rewritten in this stricter interpretation to see whether anything in the current repo structure conflicts with that model.
+acl needs to be visible to the user so he can actually accept it. You said it yourself, GAP is there to let the user choose. 
+Correct, Sir.
+ACL must be visible and explicitly accepted, otherwise it is not a gate — it is an assumption.
+The important distinction is:
+
+ACL is presented for judgment, not executed for protection.
+1. Visibility Is Required for Authority
+If the supervisor cannot see the proposed capability envelope, then approval of the task is incomplete.
+Approving a task implicitly approves:
+
+what it will change,
+how it will change it,
+what powers it is given to do so.
+So ACL must be surfaced exactly like any other artifact under review.
+2. ACL Is Not a Separate Gate — It Is Part of the Task Contract
+This is where the earlier discussion risked drifting.
+We should not model ACL as an additional protocol phase like:
+
+Requirements → Design → Tasks → ACL → …
+Because ACL is not an independent decision.
+It is inseparable from the task itself.
+Instead, the structure is:
+
+Task Proposal = Work Description + Capability Request
+If you approve the task, you approve the scope it asked for.
+3. The Correct Representation (Conceptually)
+ACL should live inside the task definition, not beside it.
+Example:
+
+TASK-12:
+  description: Refactor animation loader to support directional sheets
+  traces_to: D-03
+
+  proposes_changes:
+    - src/animation/*
+    - tests/test_animation.py
+
+  acl_request:
+    filesystem:
+      write:
+        - src/animation/**
+        - tests/**
+      read:
+        - assets/**
+    shell:
+      - pytest
+      - python -m build
+
+  cognition_request:
+    model: local/qwen3
+What GAP shows the supervisor is:
+“To perform this task, the agent is asking for these exact powers.”
+Nothing automatic happens.
+4. Why This Matters Structurally
+If ACL were its own phase:
+You could approve a task but forget to evaluate its powers.
+The protocol would allow semantic mismatch:
+“Yes, do this — wait, why can it run shell?”
+Embedding ACL prevents that separation.
+You are always approving:
+intent + means together.
+
+5. What GAP Actually Does With ACL (and Nothing More)
+GAP:
+parses the ACL block,
+records that it was approved,
+can display it in audits,
+can flag drift if execution exceeds it (if instrumentation reports that).
+GAP does not:
+sandbox,
+intercept syscalls,
+enforce runtime isolation.
+Enforcement belongs to whatever executor you attach (Docker, macOS sandbox, etc.), not to GAP itself.
+6. Model Assignment Follows the Same Rule
+Model usage is just another requested capability:
+cognition_request:
+  allowed:
+    - local/qwen3
+  escalation_requires_approval:
+    - cloud/claude
+Again — visible, reviewable, signed off.
+No routing logic inside GAP.
+
+7. The Principle to Preserve
+Every time the agent wants more ability,
+it must ask in writing.
+Every time reality changes,
+it must be traceable to that written permission.
+
+GAP is therefore not a security layer, not an orchestration engine.
+
+It is a consent ledger for technical action.
+
+If useful, Sir, the next step would be to compare this embedded-ACL model against the current security.py parsing approach and see whether the implementation already matches this shape or needs to be collapsed inward.
+same for checkpoints and model assignment
+Yes, Sir. The same rule applies to checkpoints and model assignment.
+If GAP exists to let the supervisor decide, then none of these can exist as hidden mechanics or separate “systems.”
+They must be declared inside the task and approved as part of that task’s contract, exactly like ACL.
+
+1. Collapse the Conceptual Model
+Instead of thinking in phases:
+Requirements → Design → Tasks → ACL → Model → Checkpoints
+You should think:
+Requirements → Design → Task Proposals (each proposal contains everything it needs)
+A Task Proposal is the only executable unit.
+Everything else is metadata that informs whether that unit is allowed to exist.
+2. The Task Is the Atomic Approval Surface
+A task must answer three questions before it can be approved:
+Question	Field
+What will change?	Work description
+What powers are required?	ACL request
+What cognition is allowed?	Model assignment
+When must I re-intervene?	Checkpoint request
+These are not independent decisions.
+They are facets of a single authorization event.
+3. Model Assignment Is Just Another Capability Request
+It should not live as a routing layer or configuration file.
+It is simply the agent stating:
+
+“This task requires this level of reasoning.”
+Example:
+cognition_request:
+  allowed_model: local/qwen3
+  justification: large refactor requires codebase-wide reasoning
+Approval means:
+You agreed that this level of cognition is warranted.
+Nothing auto-selects later.
+
+4. Checkpoints Are Not Runtime Strategy — They Are Declared Pause Rights
+A checkpoint is not GAP deciding to pause.
+It is the task saying:
+
+“Do not let this continue past here without review.”
+Example:
+checkpoint_request:
+  before:
+    - apply_patch
+  after:
+    - run_tests
+So when execution reaches those boundaries, GAP merely enforces the previously approved pause.
+GAP is not choosing to stop.
+It is honoring a stop that was already authorized.
+
+5. Structurally, This Keeps GAP Minimal
+If you embed these inside tasks:
+You avoid creating:
+
+a model orchestration subsystem,
+a security subsystem,
+an execution scheduler.
+Instead, GAP remains:
+A validator of declared intent.
+The executor (whatever runs the task) can interpret those declarations,
+but GAP itself stays inert except for:
+approval recording,
+state transitions,
+drift detection.
+6. What This Means for the Current Repo
+Modules like:
+security.py
+model-related additions being discussed
+checkpoint.py
+should not represent separate protocol phases.
+They should all reduce to:
+
+Parse fields from a task proposal → expose them to supervisor → record approval.
+If any module starts making decisions,
+it has stepped outside GAP’s mandate.
+7. The Clean Mental Model Going Forward
+GAP has only one real artifact type:
+The Proposed Change Unit (PCU) — currently called a Task.
+A PCU includes:
+traceability (why),
+mutation (what),
+permissions (how),
+cognition (with what),
+interruption points (when to look again).
+Approval signs the entire envelope.
+If you wish, Sir, we can now draft a canonical “GAP-compliant task schema” and compare it line-by-line with what your repository currently parses to identify mismatches without altering behavior yet.
+and local vs cloud needs to be also done in a way that it is explicit but not too overpowering. For now we dont want to have the llm propose model choice, locality, checkpoints, acl. That comes later after the manual mode is perfected.
+Understood, Sir.
+You are defining a Manual Authority Phase of GAP, where the system does not propose operational parameters yet. It merely provides a place to record decisions you already made.
+This is an important staging constraint. If ignored, the protocol would silently reintroduce automation before the discipline is established.
+
+1. Current Mode: Declarative Manual Control (No AI Suggestion)
+At this stage:
+The agent may propose work content only (the task description).
+The supervisor defines:
+ACL
+Model usage (local vs. cloud)
+Checkpoints
+So the flow becomes:
+Agent: proposes WHAT to do
+Supervisor: defines HOW it is allowed to be done
+GAP: records and enforces that agreement
+Not:
+Agent proposes everything → human rubber-stamps
+That distinction prevents premature delegation.
+2. Why This Matters (Cognitively)
+If the LLM proposes execution parameters now, you get:
+hidden heuristics,
+unconscious trust,
+erosion of intentionality.
+You would be “training yourself to approve.”
+Manual mode instead builds:
+
+A habit of explicitly scoping computation.
+This is analogous to learning to write SQL before using an ORM.
+3. Local vs. Cloud Must Be Explicit but Lightweight
+You do not want a routing configuration surface.
+You want a simple declaration of computational venue, nothing more.
+
+Bad (too system-like):
+
+model_strategy:
+  prefer_local: true
+  fallback: claude
+  budget_tokens: 200k
+This invites automation logic.
+Correct (manual, explicit, non-dominant):
+
+cognition:
+  execution: local
+  model: qwen3-coder-next
+or, if intentionally cloud:
+cognition:
+  execution: cloud
+  model: claude-3.7
+No fallback.
+No switching.
+No intelligence.
+If you want to change it, you change it manually in the task approval.
+
+4. Same Principle Applies to ACL and Checkpoints
+They are filled in by the supervisor during approval, not generated upstream.
+So an early proposal might look like:
+
+TASK-21 (proposed)
+description: Implement sprite loader abstraction
+traces_to: D-05
+And only when you approve it does it gain its operational envelope:
+TASK-21 (approved)
+description: Implement sprite loader abstraction
+traces_to: D-05
+
+acl:
+  filesystem:
+    write: src/sprites/**
+    read: assets/**
+  shell: pytest
+
+cognition:
+  execution: local
+  model: qwen3-coder-next
+
+checkpoints:
+  - before_merge
+This preserves the idea that execution conditions are authored by the supervisor, not inferred by the system.
+5. Implementation Consequence for the Repo (Important)
+You do not add:
+suggestion engines,
+advisors,
+auto-population logic.
+Instead, you ensure the CLI allows:
+gap gate approve TASK-21 --edit-envelope
+Where the human fills those fields deliberately.
+GAP then freezes them into the ledger.
+
+6. Future Phase (But Not Now)
+Only after manual mode proves stable would you allow:
+Agent may propose an envelope → Supervisor must still confirm.
+That will be an extension of authority, not a replacement.
+For now, GAP must behave like a signed paper form, not a recommender system.
+
+7. The Design Constraint to Keep in Mind
+If a feature reduces the number of conscious decisions required from you,
+it does not belong in Manual GAP Mode.
+If you want next, we can define what the minimal editable approval interface should contain so the protocol remains frictionful but not annoying to operate daily.
+ok, but I would like to clarify that after the user accepts the tasks, then the plan is constructed... NOW I SEE. tasks is just tasks, plan is tasks plus acl plus locality plus model choice plus checkpoints.
+Yes, Sir. That is the correct separation, and it resolves the earlier ambiguity.
+You are distinguishing between:
+
+Intent decomposition (what must be done)
+Authorized execution (how it is allowed to be done)
+Those are not the same artifact.
+1. tasks vs. plan — Different Ontological Roles
+Tasks = Logical Work Units (Agent may propose)
+Tasks answer only:
+What changes are necessary to satisfy the design?
+They must remain pure, free of execution context.
+Example:
+
+TASK-03:
+  description: Implement directional sprite loader
+  traces_to: D-02
+  outputs:
+    - src/graphics/sprite_loader.py
+No ACL.
+No model.
+No locality.
+No checkpoints.
+Because at this point we are still reasoning about structure, not execution.
+
+Plan = Authorized Execution Envelope (Supervisor constructs)
+The Plan is created only after tasks are accepted.
+It answers:
+
+Under what conditions may these tasks be carried out?
+The Plan is therefore a projection of tasks into reality, adding:
+capability scope (ACL),
+compute venue (local vs. cloud),
+model identity,
+interruption points (checkpoints).
+2. Why This Separation Is Important
+If you merge these too early:
+You let execution concerns contaminate reasoning.
+
+That leads to subtle distortions like:
+
+designing tasks around model limitations,
+shrinking scope to avoid cloud usage,
+over-scoping ACL “just in case.”
+By forcing a second step (Plan construction), you create a deliberate moment where the supervisor asks:
+“Given these tasks, how much power am I willing to grant?”
+That is exactly the friction GAP is meant to introduce.
+3. The Correct Lifecycle
+Requirements approved
+        ↓
+Design approved
+        ↓
+Tasks proposed (problem decomposition only)
+        ↓
+Supervisor accepts / edits Tasks
+        ↓
+Plan is constructed from Tasks
+        ↓
+Supervisor assigns execution envelope per task
+        ↓
+Execution may begin
+So Plan is not written by the agent.
+Plan is authored (or at least completed) by the supervisor.
+4. Structurally, the Plan Is a Mapping Layer
+You can think of it as:
+Plan = Tasks × Authorization
+Each task gains an attached execution contract.
+Example:
+
+PLAN:
+
+  TASK-03:
+    acl:
+      filesystem:
+        write: src/graphics/**
+        read: assets/**
+    cognition:
+      execution: local
+      model: qwen3-coder-next
+    checkpoints:
+      - after_implementation
+
+  TASK-04:
+    acl:
+      filesystem:
+        write: tests/**
+    cognition:
+      execution: cloud
+      model: claude-3.7
+    checkpoints:
+      - before_merge
+The tasks themselves remain unchanged.
+5. This Also Prevents “Plan Drift”
+If execution metadata lived inside tasks, modifying permissions later would mutate the logical record of what needed to be done.
+By isolating the Plan, you preserve:
+
+Tasks → epistemic record (why work exists)
+Plan → operational record (how it was executed)
+That separation is extremely valuable for audits and retrospection.
+6. Mapping to Your Existing Repository
+Your current components already hint at this split:
+manifest.py → protocol definition (phases)
+auditor.py → validates Tasks traceability
+security.py → currently reads permissions (this should attach to Plan, not Tasks)
+checkpoint.py → runtime enforcement (Plan-derived)
+So conceptually:
+.gap/tasks.yaml      ← logical decomposition
+.gap/plan.yaml       ← supervisor authorization layer
+.gap/status.yaml     ← execution state ledger
+No redesign required — just a cleaner semantic boundary.
+7. The Key Insight You Just Reached
+Tasks describe necessity.
+Plan describes permission.
+GAP exists almost entirely to ensure those two are never conflated.
+
+If useful, Sir, the next step would be to sketch the minimal schema for plan.yaml so it stays aligned with GAP’s philosophy and does not grow into an orchestration file.
+Ok summarize
+GAP — Current Clarified Model (Concise)
+1. Separate Necessity from Permission
+Tasks describe what must be done to satisfy the design.
+Plan describes how those tasks are allowed to be executed.
+This is the central invariant.
+Tasks  = logical decomposition (agent may propose)
+Plan   = authorization envelope (supervisor defines)
+2. Tasks Stay Pure (No Execution Context)
+A task contains only:
+description of the change,
+traceability to design/requirements,
+expected outputs.
+No ACL. No model choice. No locality. No checkpoints.
+Tasks answer:
+
+“What is necessary?”
+3. The Plan Is Created After Tasks Are Accepted
+Once the supervisor approves the task list, they construct the Plan by attaching execution constraints per task:
+ACL → what the executor may touch
+Local vs. Cloud → where computation is allowed
+Model → which cognition is permitted
+Checkpoints → where human review is required
+Plan answers:
+“What am I willing to allow in order to do this?”
+4. Nothing Is Auto-Proposed (Manual Mode)
+At this stage:
+The LLM does not suggest ACL, models, locality, or checkpoints.
+The supervisor explicitly sets them.
+GAP records and enforces those decisions.
+This prevents premature delegation and builds intentional control.
+5. GAP Does Not Enforce Security or Orchestrate Models
+GAP:
+records proposals,
+requires human approval,
+tracks state,
+detects drift.
+GAP does not:
+sandbox,
+auto-route models,
+optimize execution,
+make decisions.
+It is a consent ledger, not an automation layer.
+6. Execution Lifecycle (Final Form)
+Requirements → Design → Tasks (proposed)
+                         ↓
+                 Supervisor accepts Tasks
+                         ↓
+                 Plan is authored manually
+                         ↓
+                 GAP gates execution
+                         ↓
+                 Checkpoints enforce review
+7. Mental Model
+Tasks = epistemic record (why work existed)
+Plan = operational record (how you allowed it to happen)
+GAP’s role is to ensure those are never conflated.

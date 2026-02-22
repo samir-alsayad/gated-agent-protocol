@@ -1,7 +1,10 @@
 import re
 from pathlib import Path
+import yaml
 from typing import List, Dict, Set, Optional
 from gap.core.validator import ValidationError
+from gap.core.manifest import GapManifest
+from gap.core.models import TaskList
 
 class TraceabilityAuditor:
     """
@@ -16,40 +19,75 @@ class TraceabilityAuditor:
     TRACES_TO_PATTERN = r"\(Traces to: (.*?)\)"
     VALIDATES_PATTERN = r"\(Validates: (.*?)\)"
 
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, manifest: GapManifest):
         self.root = root
+        self.manifest = manifest
+        self._artifact_map = {step.step: step.artifact for step in manifest.get_flat_steps()}
+
+    def _get_artifact_path(self, step_id: str) -> Optional[Path]:
+        if step_id in self._artifact_map:
+            return self.root / self._artifact_map[step_id]
+        return None
 
     def audit(self) -> List[ValidationError]:
         """Performs a full audit of the project artifacts."""
         errors = []
         
+        req_path = self._get_artifact_path("requirements")
+        design_path = self._get_artifact_path("design")
+        tasks_path = self._get_artifact_path("tasks")
+        
         # 1. Parse all IDs
-        req_ids = self._extract_ids(self.root / "specs/requirements.md")
-        design_ids = self._extract_ids(self.root / "specs/design.md")
-        task_ids = self._extract_ids(self.root / "specs/tasks.md")
+        req_ids = self._extract_ids(req_path) if req_path else set()
+        design_ids = self._extract_ids(design_path) if design_path else set()
         
         # 2. Check Design -> Requirements
-        errors.extend(self._audit_links(
-            self.root / "specs/design.md", 
-            valid_targets=req_ids, 
-            link_pattern=self.VALIDATES_PATTERN,
-            context="Design Property"
-        ))
+        if design_path:
+            errors.extend(self._audit_links(
+                design_path, 
+                valid_targets=req_ids, 
+                link_pattern=self.VALIDATES_PATTERN,
+                context="Design Property"
+            ))
 
-        # 3. Check Tasks -> Design/Requirements
-        valid_task_targets = design_ids | req_ids
-        errors.extend(self._audit_links(
-            self.root / "specs/tasks.md", 
-            valid_targets=valid_task_targets, 
-            link_pattern=self.TRACES_TO_PATTERN,
-            context="Task"
-        ))
+        # 3. Check Tasks YAML
+        if tasks_path and tasks_path.exists():
+            valid_task_targets = design_ids | req_ids
+            errors.extend(self._audit_yaml_tasks(tasks_path, valid_task_targets))
         
-        # 4. Check for Orphans (Items with no outbound link)
-        # We only enforce this for non-Requirements
-        errors.extend(self._check_orphans(self.root / "specs/design.md", self.VALIDATES_PATTERN, "Design Property"))
-        errors.extend(self._check_orphans(self.root / "specs/tasks.md", self.TRACES_TO_PATTERN, "Task"))
+        # 4. Check for Orphans in MD files
+        if design_path:
+            errors.extend(self._check_orphans(design_path, self.VALIDATES_PATTERN, "Design Property"))
 
+        return errors
+
+    def _audit_yaml_tasks(self, path: Path, valid_targets: Set[str]) -> List[ValidationError]:
+        errors = []
+        try:
+            with open(path, "r") as f:
+                data = yaml.safe_load(f)
+            
+            if not data:
+                return []
+                
+            task_list = TaskList(**data)
+            for task in task_list.tasks:
+                if not task.traces_to:
+                    errors.append(ValidationError(
+                        f"Orphaned Intent: Task '{task.id}' has no traceability link.",
+                        severity="warning"
+                    ))
+                else:
+                    targets = [t.strip() for t in task.traces_to.split(",")]
+                    for t in targets:
+                        if t not in valid_targets:
+                            errors.append(ValidationError(
+                                f"Task '{task.id}' cites unknown ID: '{t}'",
+                                severity="error"
+                            ))
+        except Exception as e:
+            errors.append(ValidationError(f"Failed to parse tasks YAML: {e}", severity="error"))
+            
         return errors
 
     def _extract_ids(self, path: Path) -> Set[str]:

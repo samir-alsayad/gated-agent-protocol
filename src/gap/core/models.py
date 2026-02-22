@@ -1,42 +1,47 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import declarative_base, relationship
-from datetime import datetime
+from typing import List, Dict, Optional, Literal
+from pydantic import BaseModel, Field
 
-Base = declarative_base()
+# --- Task Models ---
 
-class Project(Base):
-    __tablename__ = 'projects'
-    
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
-    protocol = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    steps = relationship("Step", back_populates="project")
+class Task(BaseModel):
+    """
+    A logical work unit (Proposed Change Unit).
+    Purely describes necessity, without execution context.
+    """
+    id: str
+    description: str
+    traces_to: Optional[str] = None
+    outputs: List[str] = Field(default_factory=list)
 
-class Step(Base):
-    __tablename__ = 'steps'
-    
-    id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('projects.id'), nullable=False)
-    name = Column(String, nullable=False) # e.g. 'requirements'
-    status = Column(String, nullable=False) # 'locked', 'unlocked', 'complete'
-    
-    # Metadata for 'complete' steps
-    approver = Column(String)
-    timestamp = Column(DateTime)
-    
-    project = relationship("Project", back_populates="steps")
-    
-    # One entry per step per project
-    __table_args__ = (UniqueConstraint('project_id', 'name', name='uix_project_step'),)
+class TaskList(BaseModel):
+    """Schema for .gap/tasks.yaml"""
+    tasks: List[Task] = Field(default_factory=list)
 
-class History(Base):
-    __tablename__ = 'history'
-    
-    id = Column(Integer, primary_key=True)
-    step_id = Column(Integer, ForeignKey('steps.id'))
-    old_status = Column(String)
-    new_status = Column(String)
-    actor = Column(String)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+# --- Plan Models ---
+
+class FilesystemACL(BaseModel):
+    write: List[str] = Field(default_factory=list)
+    read: List[str] = Field(default_factory=list)
+
+class ACLDefinition(BaseModel):
+    filesystem: FilesystemACL = Field(default_factory=FilesystemACL)
+    shell: List[str] = Field(default_factory=list)
+    tools: Dict[str, List[str]] = Field(default_factory=dict) # allowed/blocked tools
+
+class CognitionDefinition(BaseModel):
+    execution: Literal['local', 'cloud'] = 'local'
+    model: str
+    temperature: Optional[float] = None
+
+class PlanEnvelope(BaseModel):
+    """
+    The execution authorization for a single Task.
+    """
+    acl: ACLDefinition = Field(default_factory=ACLDefinition)
+    cognition: CognitionDefinition
+    checkpoints: List[str] = Field(default_factory=list)
+
+class Plan(BaseModel):
+    """Schema for .gap/plan.yaml"""
+    # Mapping of Task ID -> Execution Envelope
+    plan: Dict[str, PlanEnvelope] = Field(default_factory=dict)

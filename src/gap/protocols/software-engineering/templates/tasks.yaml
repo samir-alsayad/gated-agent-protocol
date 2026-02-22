@@ -1,0 +1,10 @@
+# GAP Alignment Artifact: Logical Task Decomposition
+# INSTRUCTIONS FOR AGENT:
+# Break the design down into atomic Proposed Change Units (PCUs).
+
+tasks:
+  - id: T-1
+    description: "[Action] [Component] to [Purpose]"
+    traces_to: "D-1" # ID of the design property this satisfies
+    outputs:
+      - "src/path/to/file.py"

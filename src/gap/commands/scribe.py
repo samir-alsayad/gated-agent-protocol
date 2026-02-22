@@ -131,6 +131,18 @@ def create(
         typer.echo(rendered_content)
         return
 
+    # Special handling for 'plan' step (Authored manually, not proposed)
+    if step == "plan":
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        if target_path.exists() and not force:
+            typer.secho(f"⚠️  Warning: {target_path} already exists. Use --force to overwrite.", fg=typer.colors.YELLOW)
+            raise typer.Exit(code=1)
+        with open(target_path, "w") as f:
+            f.write(rendered_content)
+        typer.secho(f"📝 Plan template written to: {target_path}", fg=typer.colors.GREEN)
+        typer.echo("    Please open this file, specify execution envelopes, then run 'gap gate approve plan'.")
+        return
+
     if step_def.gate:  # gate: true = requires approval
         # Write to Proposal
         proposal_dir = root / ".gap/proposals"

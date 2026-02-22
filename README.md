@@ -4,165 +4,197 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
+[![Status](https://img.shields.io/badge/Status-v1.0.0-brightgreen)]()
 
-GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a "Workflow Compliance Layer".
+GAP is a **Protocol Engine** that enforces **Structure**, **Security**, and **Traceability** in agentic workflows. It prevents agents from deviating from requirements by strictly enforcing a Workflow Compliance Layer.
 
----
-
-## Alignment Phase and Execution Phase 
-
-GAP splits the lifecycle of an agent's work into two distinct, **gated** classes. This ensures that the supervisor remains the final authority at every critical junction.
-
-### 1. The Alignment Phase (Blueprint Logic)
-Before a single line of code is written, the supervisor must approve a configurable set of artifacts the agent shall propose.
-*   **Artifacts**: 
-We use `requirements.md`, `design.md`, `tasks.md` for most types of work and domain, but these can be extended or omitted at will.
-*   **The Gate**: **Mandatory Supervisor Approval**. The protocol prevents the agent from entering the Execution phase until the Supervisor has audited and signed off on the blueprint.
-*   **Result**: A deterministic Contract that the agent is bound to follow during Execution.
-
-### 2. The Execution/Implementation Phase (Throughput Logic)
-Once the alignment is locked, the agent moves to implementation/execution:
-*   **Artifacts**: Source code, reports, data, writing.
-*   **Execution/Implementation**: Running tests, making tool calls, running benchmarks, etc.
-*   **The Gate**: **Deterministic Checkpoints**. Based on the approved policy (`explicit`, `every`, or `batch`), the harness automatically pauses the agent for review.
-*   **Result**: High-speed execution without loss of control.
-
-### ⛓️ Workflow Compliance
-GAP enforces a strict **Chain of Custody** from intent to implementation:
-
-```
-[ ALIGNMENT PHASE ]                 [ EXECUTION PHASE ]
-Requirements → Design → Tasks  ==>  Implementation / Execution
-      ↓          ↓       ↓                  ↓
-   (gate)     (gate)   (gate)           (checkpoints)
-```
+> GAP is not a chat interface. It's not a wrapper around an AI model.
+> It's **infrastructure for agents** — the same way CI/CD is infrastructure for code.
 
 ---
 
-### 3. Interaction Classification (Separation of Concerns)
+## How It Works
 
-GAP enforces a critical distinction between what the **Protocol** controls and what the **Agent** generates:
-
-| Interaction Type | Owner | Mechanism | Examples |
-|------------------|-------|-----------|----------|
-| **Programmatic** | Protocol | **Deterministic Form** | Domain selection, policy forms, gate approvals |
-| **Generative**   | Agent    | **Probabilistic Stream** | Requirements, design, tasks, code |
-
-**The Philosophy of Determinism:**
-We believe that **Authority must be Deterministic**. 
-- An agent should not "hallucinate" its own security policy.
-- A gate should not be "suggested" by an LLM.
-- Critical boundaries (ACLs, Tool Permissions) are defined via rigid, unchangeable forms that the agent cannot influence.
-
-This ensures that while the **work** is creative (AI), the **boundaries** are absolute (Code).
-
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     GAP (Protocol Layer)                    │
-│  ┌─────────────────────┐    ┌─────────────────────────────┐ │
-│  │   PROGRAMMATIC      │    │        GENERATIVE           │ │
-│  │   (GAP Controls)    │    │      (Agent Proposes)       │ │
-│  │                     │    │                             │ │
-│  │  • Domain Selection │    │  • Requirements Content     │ │
-│  │  • Policy Forms     │    │  • Design Documents         │ │  
-│  │  • Gate Approvals   │    │  • Task Definitions         │ │
-│  │  • Checkpoints      │    │  • Code Implementation      │ │
-│  └─────────────────────┘    └─────────────────────────────┘ │
-│              ↓                          ↓                   │
-│         [Deterministic]            [Can be Gated]           │
-└─────────────────────────────────────────────────────────────┘
-```
-
-
-
-
-
-## 🌍 4. Example Domains
-
-GAP is domain-agnostic. It enforces the same integrity whether you are building a CPU or writing a poem.
-
-| Domain | Protocol | Goal |
-| :--- | :--- | :--- |
-| **🏗️ School** | `instructional` | Scribes first-principles curricula. |
-| **💻 Software** | `software-dev` | High-integrity, ACL-gated coding. |
-| **🔬 Science** | `benchmarking` | Verifiable experimental methodology. |
-| **📖 Authoring** | `creative-writing` | Traceable narrative architecture. |
-
----
-
-## 🛡️ 5. Core Engine Features
-
-### 1. The Traceability Auditor
-Run `gap check traceability` to verify the **Trinity of Intent**. The engine automatically detects "Orphaned Intent"—any task or design decision that cannot prove its pedigree back to a validated requirement.
-
-### 2. Path-Locked Security (ACL)
-Agents are confined to whitelisted directories defined in the approved `tasks.md`. No "leaking" into system files or unauthorized project areas.
-
-### 3. Verification State Machine
-A rigid graph of checkpoints (LOCKED -> PENDING -> APPROVED). Authority is never assumed; it is granted via explicit user gates.
-
-### 4. Configurable Execution Gates
-Each Session and Project defines its own specific execution gates, where the supervisor must approve the agent's work to allow it to proceed. With GAP, you set the checkpoints *before* you send the agent off.
-
----
-
-## 📋 Requirements
-
-- Python 3.10+
-- macOS, Linux, or Windows
-- No external services required (Standard YAML/File-based Ledger)
-
----
-
-## 🚀 Quick Start
-
-### Install
-
-```bash
-# Stable release
-pip install git+https://github.com/samir-alsayad/gated-agent-protocol.git@v1.0.0
-
-# Or latest main branch
-pip install git+https://github.com/samir-alsayad/gated-agent-protocol.git
-```
-
-### Verify Installation
-
-```bash
-gap --help
-```
-
-### Example Workflow
-
-Create a `manifest.yaml`:
+A GAP project starts with a **manifest** — a declarative definition of the entire workflow:
 
 ```yaml
+# manifest.yaml
 kind: project
 name: my-project
-version: 1.0.0
-description: "My first GAP project"
-
 extends:
   - protocol: software-engineering
 
 flow:
   - step: requirements
     artifact: docs/requirements.md
-    gate: true  # Requires approval
-    
+    gate: true                      # Supervisor must approve
+
   - step: design
     artifact: docs/design.md
     gate: true
     needs: [requirements]
-    
+
+  - step: tasks
+    artifact: .gap/tasks.yaml       # Machine-readable YAML
+    view: docs/tasks.md             # Human-readable markdown
+    gate: true
+    needs: [design]
+
+  - step: plan
+    artifact: .gap/plan.yaml        # Execution envelopes
+    gate: true
+    needs: [tasks]
+
   - step: implementation
     artifact: src/
-    gate: false  # Autonomous
-    needs: [design]
+    gate: false                     # Autonomous execution
+    needs: [plan]
 ```
 
-Then run:
+The manifest defines **what** the agent must produce and **where** the supervisor intervenes. GAP then enforces this in two phases:
+
+### 1. Alignment Phase — *What should we build, and how are we allowed to execute it?*
+
+GAP strictly separates **Necessity** from **Permission**. 
+
+*   **Tasks** answer: *"What must change to satisfy the design?"* (Agent proposes)
+*   **Plan** answers: *"What powers and resources am I willing to grant to achieve this?"* (Supervisor defines)
+
+The workflow follows a distinct lifecycle to ensure these are never conflated:
+
+```
+Requirements → Design → Tasks (proposed)
+                         ↓
+                 Supervisor accepts Tasks
+                         ↓
+                 Plan is authored manually 
+                         ↓
+                 GAP gates execution
+                         ↓
+                 Checkpoints enforce review
+```
+
+Once the agent proposes the Tasks, the supervisor constructs the **Plan**. The Plan attaches an *authorized execution envelope* to each task. This envelope contains:
+*   **ACL**: What files the task may touch.
+*   **Execution**: Local vs Cloud compute venue.
+*   **Model**: Which specific cognitive model is authorized.
+*   **Checkpoints**: Where human interruption is required.
+
+GAP does not enforce security, sandbox code, or auto-route models. It is strictly a **consent ledger** that records these proposals and requires human approval for all state transitions.
+
+### 2. Execution Phase — *Build it.*
+Once the Plan is locked, the agent coordinates execution. When it hits an approved checkpoint boundary, GAP blocks further action until the supervisor intervenes.
+
+---
+
+## Why GAP Exists
+
+| Problem | How GAP Solves It |
+|---|---|
+| Agents drift from requirements over long contexts | **Gated checkpoints** re-anchor intent at every phase |
+| No way to know *what the agent decided* vs *what you approved* | **Immutable Ledger** tracks every state transition |
+| Agents "hallucinate" their own security policies | **Deterministic ACLs** — security is code, not prompts |
+| No traceability from code back to intent | **Chain of Custody** links every task to a requirement |
+
+### The Core Principle: Determinism vs. Probabilism
+
+|  | **Deterministic (Protocol)** | **Probabilistic (Agent)** |
+|---|---|---|
+| **Who** | GAP | The LLM |
+| **What** | Gates, ACLs, checkpoints, policy | Requirements, design, code |
+| **Trust model** | Absolute — defined in code | Gated — proposed, then approved |
+
+Authority is never generated by an LLM. It is enforced by the protocol.
+
+---
+
+## What's Built Today
+
+### Core Engine
+- **`gap check status`** — View current state of all phases and gates
+- **`gap scribe create`** — Generate artifacts for any phase
+- **`gap gate list / approve`** — Manage gate approvals with ACL extraction
+- **`gap check traceability`** — Verify chain of custody from requirements → tasks
+- **`gap checkpoint verify/approve`** — Runtime checkpoint enforcement
+- **Manifest System** — YAML workflow definition with protocol inheritance
+- **Ledger System** — Immutable record of approvals and state transitions
+- **Basic ACL** — Access control list parsing and storage
+
+### Current Development Focus
+- **Task/Plan Separation** — Distinguishing necessity (Tasks) from permission (Plan)
+- **Execution Envelopes** — ACL, locality, model assignment, checkpoints in Plan
+- **Enhanced Gate System** — Plan construction during task approval
+- **Structured Task Model** — YAML tasks with traceability and references
+
+---
+
+## 🗺️ Roadmap
+
+### Plan Layer Implementation *(Current Focus)*
+> [.kiro/specs/gap-core-system/](.kiro/specs/gap-core-system/)
+
+The current focus: **Complete separation of Tasks from Plan** with explicit execution envelopes.
+
+- **Task Model** — Structured YAML tasks with traceability to design/requirements
+- **Plan Construction** — Supervisor-defined execution envelopes per task
+- **Execution Envelopes** — ACL, locality, model assignment, checkpoints in unified Plan file
+- **Manual Authority Phase** — Supervisor defines all execution parameters, no AI suggestions
+
+```yaml
+# Coming: Plan envelope in .gap/plan.yaml
+plan:
+  T-1:
+    acl:
+      filesystem:
+        write: [src/auth.py, tests/test_auth.py]
+        read: [src/utils.py]
+      shell: [pytest, python -m build]
+    cognition:
+      execution: local
+      model: qwen3-coder-next
+    checkpoints:
+      - after_implementation
+      - before_merge
+```
+
+### Core Engine Enhancements
+- **Enhanced Gate System** — `gap gate approve --edit-envelope` for Plan construction
+- **Plan Management CLI** — `gap plan show/edit/validate` commands
+- **Checkpoint Enforcement** — Runtime pause at declared boundaries
+- **Ledger Enhancement** — Record Plan approvals with execution parameters
+
+### Future Considerations
+- **Model Control Layer** — Explicit model assignment without orchestration
+- **Session Model** — Law & Exception governance patterns
+- **Protocol Templates** — Domain-specific workflow patterns
+
+---
+
+## 🌱 Example Project: Ascent
+
+**[Ascent](https://github.com/samir-alsayad/ascent)** is a real-world project built with GAP governance. It's a capability resolver for learning — given a goal and a learner's verified state, it computes the minimal transformation required and delivers only the learning needed to close that gap.
+
+Ascent is **not** a chat interface. It's a structured system with its own engine, knowledge graphs, and evidence models — exactly the kind of project where uncontrolled agent behavior would cause structural failures. GAP provides the guardrails.
+
+> Ascent demonstrates how GAP works in practice: requirements define learning goals, design maps the capability graph, tasks decompose into module generation, and execution is checkpointed to prevent drift.
+
+---
+
+## Quick Start
+
+### Install
+
+```bash
+pip install git+https://github.com/samir-alsayad/gated-agent-protocol.git@v1.0.0
+```
+
+### Verify
+
+```bash
+gap --help
+```
+
+### Basic Workflow
 
 ```bash
 # Check current state
@@ -177,32 +209,15 @@ gap gate approve requirements --manifest manifest.yaml
 ```
 
 **Output:**
-```text
+```
 🟢 requirements: UNLOCKED
 🔒 design: LOCKED (waiting for: requirements)
 🔒 implementation: LOCKED (waiting for: design)
 ```
 
-## 🏗️ 7. Reference Implementation
-
-GAP provides a reference implementation to demonstrate the protocol in action.
-
-### The Gated TUI (`gated_agent_tui`)
-A stable, text-based interface for managing the Alignment phase. It allows you to:
-- Scribe requirements and design.
-- Audit the Trinity of Intent.
-- Manage state transitions (LOCKED -> APPROVED).
-
-### The GPTme Driver (`gap-gptme`)
-> [!WARNING]
-> **Experimental / Early Alpha**
-> The native `gptme` driver is currently under development. While it demonstrates the power of autonomous execution with deterministic gates, it may encounter edge cases in tool handling and state persistence.
-
-The GPTme driver is designed for **High-Throughput Execution**. Once Alignment is locked in the TUI, the GPTme driver takes over to implement the code, bound by the approved policies.
-
 ---
 
-## 📚 Documentation
+## Documentation
 
 | Document | Description |
 |----------|-------------|
@@ -211,32 +226,26 @@ The GPTme driver is designed for **High-Throughput Execution**. Once Alignment i
 | [Project Schema](docs/SCHEMA_PROJECT.md) | How to configure projects |
 | [CLI Reference](docs/cli.md) | All commands |
 | [Integration Guide](docs/integration_guide.md) | Adding GAP to your tools |
+| [Model Control Layer](docs/Model%20Control%20Layer/) | Upcoming MCL requirements and design |
 
 ---
 
-## 🔧 Development
+## Requirements
+
+- Python 3.10+
+- macOS, Linux, or Windows
+- No external services required (YAML/File-based Ledger)
+
+## Development
 
 ```bash
-# Clone the repo
 git clone https://github.com/samir-alsayad/gated-agent-protocol.git
 cd gated-agent-protocol
-
-# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # or .venv\Scripts\activate on Windows
-
-# Install in development mode
+source .venv/bin/activate
 pip install -e .
-
-# Run tests
 pytest tests/ -v
 ```
-
----
-
-## 🔒 Security
-
-See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 
 ---
 
@@ -244,7 +253,11 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## 🔒 Security
+
+See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
 ---
 
-*Open Standard - v1.0.0 - 2026*
+*Open Standard — v1.0.0 — 2026*
 *Created by Samir Alsayad.*

@@ -19,29 +19,30 @@ flow:
     needs: [requirements]
     description: "Architecture, Data Structures, and Correctness Properties."
 
-  - step: policy
-    name: "Execution Policy"
-    template: policy
-    artifact: .gap/policy.md
+  - step: tasks
+    name: "Logical Task Decomposition"
+    template: tasks
+    artifact: .gap/tasks.yaml
+    view: docs/tasks.md
     gate: true
     needs: [design]
-    description: "Gating strategy and execution boundaries."
+    description: "Atomic actions traceable directly to architectural design."
 
-  - step: task
-    name: "Operational Tasks"
-    template: task
-    artifact: docs/tasks.md
+  - step: plan
+    name: "Execution Plan Envelope
+    template: plan
+    artifact: .gap/plan.yaml
     gate: true
-    needs: [policy]
-    description: "Atomic actions traceable to design properties."
+    needs: [tasks]
+    description: "Supervisor-defined execution permissions and checkpoints per task."
 
-  - step: execution
-    name: "Execution & Scribing"
-    template: execution
-    artifact: docs/walkthrough.md
+  - step: implementation
+    name: "Implementation"
+    template: implementation
+    artifact: src/*
     gate: true
-    needs: [task]
-    description: "Derived output locked to approved ACLs."
+    needs: [plan]
+    description: "Code generation and implementation."
 
   - step: verification
     name: "Verification & Walkthrough"
@@ -54,6 +55,6 @@ flow:
 templates:
   requirements: templates/requirements.md
   design: templates/design.md
-  plan: templates/plan.md
-  task: templates/task.md
+  tasks: templates/tasks.yaml
+  plan: templates/plan.yaml
   verification: templates/verification.md

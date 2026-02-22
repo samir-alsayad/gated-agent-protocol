@@ -1,0 +1,13 @@
+# GAP Execution Envelope
+# INSTRUCTIONS FOR SUPERVISOR:
+# Construct this plan AFTER approving the tasks.
+# This configures the harness/executor that will run the agent.
+
+plan:
+  T-1:
+    cognition:
+      execution: local
+      model: qwen3-coder-next
+    checkpoints:
+      - after_completion
+

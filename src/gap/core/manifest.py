@@ -18,6 +18,7 @@ class Step(BaseModel):
     step: str
     name: Optional[str] = None
     artifact: str
+    view: Optional[str] = None  # Human-readable markdown view of the artifact
     gate: bool = True  # true = requires approval, false = autonomous
     needs: List[str] = Field(default_factory=list)
     action: Optional[str] = None # e.g. 'scribe'

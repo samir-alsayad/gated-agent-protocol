@@ -101,8 +101,9 @@ def check_traceability(
     from gap.core.auditor import TraceabilityAuditor
     
     try:
+        manifest = load_manifest(path)
         root = path.parent
-        auditor = TraceabilityAuditor(root)
+        auditor = TraceabilityAuditor(root, manifest)
         errors = auditor.audit()
         
         if errors:

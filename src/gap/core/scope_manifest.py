@@ -8,9 +8,10 @@ class ACLContext:
         self.allowed_writes: List[str] = []
         self.allowed_execs: List[str] = []
 
-class ACLEnforcer:
+class ScopeParser:
     """
-    Parses and enforces Access Control Lists (ACLs) embedded in GAP artifacts.
+    Parses the declared capability envelope (ACL) embedded in GAP artifacts.
+    This does NOT sandbox or enforce. It merely extracts what the supervisor approved.
     """
     def __init__(self, content: str = ""):
         self.context = ACLContext()
@@ -35,7 +36,7 @@ class ACLEnforcer:
                 pass
 
     @staticmethod
-    def extract_from_file(path: Path) -> 'ACLEnforcer':
+    def extract_from_file(path: Path) -> 'ScopeParser':
         if not path.exists():
-            return ACLEnforcer()
-        return ACLEnforcer(path.read_text())
+            return ScopeParser()
+        return ScopeParser(path.read_text())
