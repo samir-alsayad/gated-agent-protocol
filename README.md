@@ -83,7 +83,7 @@ Once the agent proposes the Tasks, the supervisor constructs the **Plan**. The P
 GAP does not enforce security, sandbox code, or auto-route models. It is strictly a **consent ledger** that records these proposals and requires human approval for all state transitions.
 
 ### 2. Execution Phase — *Build it.*
-Once the Plan is locked, the agent coordinates execution. When it hits an approved checkpoint boundary, GAP blocks further action until the supervisor intervenes.
+Once the Plan is locked, GAP coordinates the agent. When it hits an approved checkpoint boundary, GAP blocks further action until the supervisor intervenes.
 
 ---
 
@@ -162,6 +162,11 @@ plan:
 - **Plan Management CLI** — `gap plan show/edit/validate` commands
 - **Checkpoint Enforcement** — Runtime pause at declared boundaries
 - **Ledger Enhancement** — Record Plan approvals with execution parameters
+
+### Continuous Assurance
+- **Real-world Effectiveness Assessment** — Empirical validation of security layers (VFS, ACLs, Gating) to ensure they provide actual protection beyond "Gated Security Theater."
+- **Red Teaming** — Stress-testing the protocol against autonomous agents attempting to bypass the supervisor.
+- **Verification Efficacy** — Tracking the signal-to-noise ratio of automated verification hooks.
 
 ### Future Considerations
 - **Model Control Layer** — Explicit model assignment without orchestration

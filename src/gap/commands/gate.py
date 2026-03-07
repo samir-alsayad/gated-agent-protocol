@@ -8,7 +8,6 @@ from datetime import datetime
 from gap.core.manifest import load_manifest
 from gap.core.state import StepStatus
 from gap.core.factory import get_ledger
-from gap.core.scope_manifest import ScopeParser
 
 app = typer.Typer(help="Manage approvals and state transitions.")
 
@@ -116,38 +115,7 @@ def approve(
         typer.secho(f"Error: No proposal found for step '{step}' at {proposal_path}.", fg=typer.colors.RED)
         raise typer.Exit(code=1)
     
-    # 4. Extract and Validate ACL (Security Integration)
-    with open(proposal_path, 'r') as f:
-        content = f.read()
-    
-    parser = ScopeParser(content=content)
-    
-    # Warn if no ACL for manual gates
-    if step_def.gate:  # gate: true = requires approval
-        if not parser.context.allowed_writes and not parser.context.allowed_execs:
-            typer.secho(
-                "⚠️  Warning: No ACL block found in proposal.",
-                fg=typer.colors.YELLOW
-            )
-            typer.secho(
-                "    Next gate will be read-only by default.",
-                fg=typer.colors.YELLOW
-            )
-            if not typer.confirm("Continue with approval?"):
-                raise typer.Exit(0)
-    
-    # Store ACL for next gate's use
-    acl_dir = root / ".gap" / "acls"
-    acl_dir.mkdir(parents=True, exist_ok=True)
-    acl_path = acl_dir / f"{step}.yaml"
-    
-    with open(acl_path, "w") as f:
-        yaml.dump({
-            "allow_write": parser.context.allowed_writes,
-            "allow_exec": parser.context.allowed_execs
-        }, f)
-    
-    # 5. Move to Live (The Gate) - with atomic rollback
+    # 4. Move to Live (The Gate) - with atomic rollback
     target_path = root / step_def.artifact
     backup_path = None
     
@@ -170,8 +138,6 @@ def approve(
             backup_path.unlink()
         
         typer.secho(f"✅ Approved! Moved to: {target_path}", fg=typer.colors.GREEN)
-        if parser.context.allowed_writes or parser.context.allowed_execs:
-            typer.secho(f"🔒 ACL stored for next gate: {acl_path}", fg=typer.colors.BLUE)
         
     except Exception as e:
         # Rollback on failure
