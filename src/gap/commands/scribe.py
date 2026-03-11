@@ -90,19 +90,13 @@ def create(
     # Convention: If `artifact` is `docs/design.md`, template is `design`.
     # Let's use the 'map' in manifest if available.
     
-    template_key = step
-    if step in manifest.templates:
-        template_key = manifest.templates[step]
-        
     # 4. Resolve Template
     pm = PathManager(root)
     try:
-        # We try to search for the template file. 
-        # Since PathManager.resolve_template expects a NAME (e.g. 'course'), not a path.
-        # We pass `template_key`.
-        template_path = pm.resolve_template(manifest, template_key)
+        # Try to resolve by step name (which PathManager handles via manifest.templates)
+        template_path = pm.resolve_template(manifest, step)
     except FileNotFoundError:
-        # Fallback: if explicit template field is set
+        # Fallback: if explicit template field is set in the step definition
         if step_def.template:
              try:
                  template_path = pm.resolve_template(manifest, step_def.template)
@@ -131,17 +125,7 @@ def create(
         typer.echo(rendered_content)
         return
 
-    # Special handling for 'plan' step (Authored manually, not proposed)
-    if step == "plan":
-        target_path.parent.mkdir(parents=True, exist_ok=True)
-        if target_path.exists() and not force:
-            typer.secho(f"⚠️  Warning: {target_path} already exists. Use --force to overwrite.", fg=typer.colors.YELLOW)
-            raise typer.Exit(code=1)
-        with open(target_path, "w") as f:
-            f.write(rendered_content)
-        typer.secho(f"📝 Plan template written to: {target_path}", fg=typer.colors.GREEN)
-        typer.echo("    Please open this file, specify execution envelopes, then run 'gap gate approve plan'.")
-        return
+    # Write Directly to Proposal or Live
 
     if step_def.gate:  # gate: true = requires approval
         # Write to Proposal

@@ -1,28 +1,25 @@
 # Operational Tasks: {{ project_name }}
 
-## 1. Access Control (ACL)
-*Automatically derived from approved tasks. The Harness will enforce this.*
+## 1. Phase 1: Setup & Foundational
+Blocking prerequisites and project initialization.
 
-```yaml
-allow_write:
-  - {{ allowed_path_1 }}
-allow_exec:
-  - {{ allowed_command_1 }}
-```
+- [ ] **T001: {{ setup_task_title }}**
+  - **Description**: {{ setup_task_desc }}
+  - **Traces to**: {{ property_id_1 }}
 
-## 2. Task Checklist
-Break the Structural Design into atomic, verifiable actions.
+## 3. Phase 2: User Story Increments
+Feature-specific tasks, ordered by priority.
 
-- [ ] **Task 1: {{ task_title_1 }}**
-  - **Description**: {{ task_desc_1 }}
-  - **Traces to**: {{ property_id_1 }}, {{ requirement_id_1 }}
-  
-- [ ] **Task 2: {{ task_title_2 }}**
-  - **Description**: {{ task_desc_2 }}
-  - **Traces to**: {{ property_id_2 }}
+### [US1] {{ story_title }}
+- [ ] **T010 [P]: {{ story_task_title }}**
+  - **Description**: {{ story_task_desc }}
+  - **Traces to**: {{ requirement_id_1 }}
 
-## 3. Execution Status
-{{ progress_summary }}
+## 4. Phase 3: Polish & Deployment
+Final QA, documentation, and release tasks.
+
+- [ ] **T050: {{ polish_task_title }}**
+  - **Description**: {{ polish_task_desc }}
 
 ---
 **Verification Rule**: No task may exist without a trace to a Property (Design) or Requirement (Intent).

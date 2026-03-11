@@ -67,47 +67,6 @@ def approve(
         typer.secho(f"Error: Step '{step}' not found in manifest.", fg=typer.colors.RED)
         raise typer.Exit(code=1)
 
-    # 3. Special Handling for 'plan' step
-    if step == "plan":
-        plan_path = root / step_def.artifact
-        tasks_path = root / ".gap/tasks.yaml"
-        
-        if not plan_path.exists():
-            typer.secho(f"Error: No plan found at {step_def.artifact}. Please construct the plan manually.", fg=typer.colors.RED)
-            raise typer.Exit(code=1)
-            
-        with open(plan_path) as f:
-            plan_data = yaml.safe_load(f)
-            
-        from gap.core.models import Plan, TaskList
-        try:
-            plan_obj = Plan(**(plan_data or {}))
-        except Exception as e:
-            typer.secho(f"❌ Invalid Plan format:\n{e}", fg=typer.colors.RED)
-            raise typer.Exit(code=1)
-            
-        if tasks_path.exists():
-            with open(tasks_path) as f:
-                tasks_data = yaml.safe_load(f)
-            if tasks_data:
-                task_list = TaskList(**tasks_data)
-                task_ids = {t.id for t in task_list.tasks}
-                plan_task_ids = set(plan_obj.plan.keys())
-                
-                missing = task_ids - plan_task_ids
-                if missing:
-                    typer.secho(f"⚠️  Warning: Plan is missing envelopes for tasks: {', '.join(missing)}", fg=typer.colors.YELLOW)
-                    if not typer.confirm("Approve incomplete plan?"):
-                        raise typer.Exit(code=0)
-                
-                extra = plan_task_ids - task_ids
-                if extra:
-                    typer.secho(f"⚠️  Warning: Plan contains envelopes for unknown tasks: {', '.join(extra)}", fg=typer.colors.YELLOW)
-                    
-        ledger = get_ledger(root, manifest)
-        ledger.update_status(step, StepStatus.COMPLETE, approver="user")
-        typer.secho(f"✅ Plan Approved and Locked!", fg=typer.colors.GREEN)
-        return
 
     # 4. Locate Proposal (Standard flow for requirements, design, tasks, etc)
     proposal_path = root / ".gap/proposals" / step_def.artifact

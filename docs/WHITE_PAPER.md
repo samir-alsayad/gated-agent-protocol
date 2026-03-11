@@ -89,6 +89,13 @@ The Harness enforces mandatory pause points during Task execution, acting as a C
 
 ---
 
+## 6. Concurrent Swarm Governance
+
+The ultimate evolution of GAP is the **Swarm Factory**. By nesting the 5-phase alignment chain within a feature-based directory structure (`.gap/features/`), we move from a monolithic waterfall to a distributed, concurrent CI/CD pipeline for agents.
+
+*   **Atomic State**: Every feature manages its own `status.yaml` or ledger entry.
+*   **Worktree Immunity**: Agents cannot "hallucinate" changes across the project. They are physically jailed within their assigned worktree until a Human Gate approves the merge.
+
 ## 5. Conclusion
 
 GAP is **Infrastructure for Agents**. Just as CI/CD pipelines govern the deployment of code, GAP governs the generation of code.

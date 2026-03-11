@@ -13,32 +13,31 @@ graph TD
 Define verifiable properties that must always hold. Each property validates one or more goals/requirements.
 
 *   **P-01**: {{ property_1 }} — *Validates: G-01*
-*   **P-02**: {{ property_2 }} — *Validates: G-02, C-01*
-*   **P-03**: {{ property_3 }} — *Validates: G-03*
+*   **P-02**: {{ property_2 }} — *Validates: G-02*
 
-## 3. Data Models
-Key data structures and their relationships.
+## 3. Data Models (Entities & Relationships)
+Define the core state. Use Pydantic or similar for schema clarity.
 
 ```python
-# Example structure
-class {{ model_name }}:
+class {{ entity_name }}:
+    """{{ entity_description }}"""
+    id: UUID
     {{ field_1 }}: {{ type_1 }}
-    {{ field_2 }}: {{ type_2 }}
 ```
 
 ## 4. Interface Contracts
-Public APIs and their contracts.
+Public APIs, CLI schemas, or internal module boundaries.
 
 ### {{ interface_name }}
+- **Type**: {{ interface_type }} (e.g., REST, CLI, Python API)
+- **Signature**: `{{ signature }}`
 - **Input**: {{ input_spec }}
 - **Output**: {{ output_spec }}
-- **Invariants**: {{ invariant_spec }}
+- **Error States**: {{ error_spec }}
 
-## 5. Dependencies
-External libraries, services, or systems required.
-
-*   {{ dependency_1 }}
-*   {{ dependency_2 }}
+## 5. Dependencies & Infrastructure
+*   **Libraries**: {{ libraries }}
+*   **Services**: {{ services }}
 
 ---
 **Verification Rule:** Every property MUST validate at least one Goal ID from intent.md.
