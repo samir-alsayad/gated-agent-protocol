@@ -1,60 +1,57 @@
 kind: protocol
 name: software-engineering
-version: 0.1.0
-description: "The Standard Protocol for Software Development (Reqs -> Plan -> Code -> Verify)."
+version: 0.2.0
+description: "High-Trust Gated Protocol (Idea -> Plan -> Code)."
 
 flow:
+  - step: idea
+    name: "Conceptual Alignment"
+    template: idea
+    artifact: .gap/idea.md
+    gate: true
+    description: "Define the core concept, problem, and key values."
+
   - step: requirements
     name: "Requirements & Analysis"
     template: requirements
-    artifact: docs/requirements.md
+    artifact: .gap/requirements.md
     gate: true
-    description: "Define the problem, user stories, and constraints."
+    description: "Define the problem, user stories, and measurable success criteria."
 
   - step: design
     name: "Structural Design"
     template: design
-    artifact: docs/design.md
+    artifact: .gap/design.md
     gate: true
     needs: [requirements]
-    description: "Architecture, Data Structures, and Correctness Properties."
+    description: "Architecture, Data Models, and Interface Contracts."
 
   - step: tasks
     name: "Logical Task Decomposition"
-    template: tasks
-    artifact: .gap/tasks.yaml
-    view: docs/tasks.md
+    template: task
+    artifact: .gap/tasks.md
     gate: true
     needs: [design]
-    description: "Atomic actions traceable directly to architectural design."
+    description: "Phased action plan traceable to design."
 
   - step: plan
-    name: "Execution Plan Envelope
+    name: "Execution Policy"
     template: plan
-    artifact: .gap/plan.yaml
+    artifact: .gap/plan.md
     gate: true
     needs: [tasks]
-    description: "Supervisor-defined execution permissions and checkpoints per task."
+    description: "Supervisor-defined execution venues (locality) and model assignment."
 
   - step: implementation
     name: "Implementation"
-    template: implementation
     artifact: src/*
-    gate: true
+    gate: false
     needs: [plan]
     description: "Code generation and implementation."
 
-  - step: verification
-    name: "Verification & Walkthrough"
-    template: verification
-    artifact: docs/walkthrough.md
-    gate: true
-    needs: [implementation]
-    description: "Proof of work and test results."
-
 templates:
+  idea: templates/idea.md
   requirements: templates/requirements.md
   design: templates/design.md
-  tasks: templates/tasks.yaml
-  plan: templates/plan.yaml
-  verification: templates/verification.md
+  task: templates/task.md
+  plan: templates/plan.md

@@ -1,34 +1,21 @@
-# Implementation Plan: {{ project_name }}
+# Execution Policy: {{ project_name }}
 
-## 1. Plan Overview
-{{ summary }}
+## 1. Governance Overview
+This document defines the **Authority** (Venue and Model Selection) and **Gates** (Checkpoints) for the implementation phases defined in [.gap/tasks.md](file://./tasks.md).
 
-## 2. Implementation Steps
-Each step must trace back to Goals (G-), Constraints (C-), or Properties (P-) from previous artifacts.
+## 2. Resource Assignment (Authority)
+Define the execution venue (Cloud Provider vs Local Inference) and authorized models for each phase inherited from the approved task list.
 
-- [ ] **STEP-01**: {{ step_1_description }} — *Trace: G-01*
-- [ ] **STEP-02**: {{ step_2_description }} — *Trace: G-02, P-01*
-- [ ] **STEP-03**: {{ step_3_description }} — *Trace: C-01, P-02*
-- [ ] **STEP-04**: {{ step_4_description }} — *Trace: P-03*
-- [ ] **STEP-05**: Write tests for core logic — *Trace: P-01, P-02, P-03*
-- [ ] **STEP-06**: Integration testing — *Trace: G-01, G-02*
+| Task Phase | Locality (Provider/Local) | Cognition (Model ID) |
+| :--- | :--- | :--- |
+| **Phase 1: Setup** | {{ setup_locality }} | {{ setup_model }} |
+| **Phase 2: Foundation** | {{ foundation_locality }} | {{ foundation_model }} |
+| **Phase 3: Implementation** | {{ implementation_locality }} | {{ implementation_model }} |
 
-## 3. Access Control
-Define which files can be modified and which commands can be executed during implementation.
-
-```yaml
-allow_write:
-  - "src/**/*.py"
-  - "tests/**/*.py"
-  - "docs/*.md"
-  - "README.md"
-
-allow_exec:
-  - "pytest tests/"
-  - "python -m mypy src/"
-  - "python -m black src/ tests/"
-```
+## 3. Global Policy Overrides
+*   **Max Budget**: {{ total_budget }}
+*   **Safety Level**: {{ safety_tier }} (e.g., Strict, Permissive)
+*   **Model Tier**: {{ model_tier }} (e.g., Performance, Efficiency)
 
 ---
-**Verification Rule:** Total step coverage MUST account for 100% of defined Goals and Properties.  
-**Security Note:** The Access Control block above will be enforced during the implementation gate.
+**Protocol Note:** This document ensures the agent stays within the approved venue and model tier for each specific phase of the project, as defined in the approved `tasks.md`.

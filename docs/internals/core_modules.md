@@ -46,7 +46,7 @@ These files might be over-engineering. Read carefully:
 
 ### 7. `validator.py`
 **What it does:** Looks at `manifest.yaml` and runs a complex algorithm ("Topological Sort") to make sure you didn't accidentally create an infinite loop (e.g. Step A needs Step B, but Step B needs Step A).
-**The Problem:** The manifests are extremely simple, static 6-step YAML files written by us, not dynamically generated code. We are never going to accidentally write an infinite loop in a hardcoded 20-line YAML file. This is classic computer-science over-engineering.
+**The Problem:** The manifests are extremely simple, static 6-step YAML files written by us, not dynamically generated code. We are never going to accidentally wriWho writes ite an infinite loop in a hardcoded 20-line YAML file. This is classic computer-science over-engineering.
 **Verdict:** [ ] KEEP / [ ] DELETE
 
 ### 8. `path.py`

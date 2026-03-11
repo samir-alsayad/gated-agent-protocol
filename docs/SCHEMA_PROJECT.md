@@ -26,6 +26,16 @@ execution:
       - "2.1"
       - "3.4"
       - "6.2"
+
+# Concurrent Swarm Strategy (v3.0)
+features_directory: .gap/features/
+worktree_isolation: true
+feature_lifecycles:
+  - idea
+  - requirements
+  - design
+  - tasks
+  - plan
 ```
 
 ## 3. Invariants

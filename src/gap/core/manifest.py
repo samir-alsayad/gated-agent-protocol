@@ -3,17 +3,6 @@ from pathlib import Path
 from typing import List, Literal, Optional, Dict, Union
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-class CheckpointStrategy(str, Enum):
-    """When to pause execution for approval."""
-    EXPLICIT = "explicit"  # Pause at listed task IDs
-    EVERY = "every"        # Pause after every task
-    BATCH = "batch"        # Run all, review at end
-
-class Checkpoints(BaseModel):
-    """Execution checkpoint configuration."""
-    strategy: CheckpointStrategy = CheckpointStrategy.EXPLICIT
-    after_tasks: List[str] = Field(default_factory=list)
-
 class Step(BaseModel):
     step: str
     name: Optional[str] = None
@@ -58,9 +47,6 @@ class GapManifest(BaseModel):
     description: str
     flow: List[Union[Step, PhaseClass]] = Field(default_factory=list)
     extends: List[ProtocolRef] = Field(default_factory=list)
-    
-    # Execution configuration
-    checkpoints: Optional[Checkpoints] = None
     
     # Mapping for Project implementation (e.g. Course -> Campaign)
     templates: Dict[str, str] = Field(default_factory=dict)
